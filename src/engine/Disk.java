@@ -43,7 +43,7 @@ public class Disk {
      * @param player The Player that owns the Disk
      * @param color The color of the Disk
      */
-    public Disk(Player player, Color color) {
+    Disk(Player player, Color color) {
         this.changeSupport = new PropertyChangeSupport(this);
         this.player = player;
         this.color = color;
@@ -77,6 +77,15 @@ public class Disk {
         this.color = color;
 
         this.changeSupport.firePropertyChange(COLOR_PROPERTY, oldColor, color);
+    }
+
+    /**
+     * String version of a Disk.
+     *
+     * @return String version of a Disk
+     */
+    public String toString() {
+        return "Joueur : "+this.getPlayer()+"\tCouleur : "+this.getColor().toString()+"\n";
     }
 
     /**

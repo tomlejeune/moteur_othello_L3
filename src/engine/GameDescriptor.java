@@ -40,7 +40,7 @@ public class GameDescriptor {
      * @param player1 First Player of the Game
      * @param player2 Second Player of the Game
      */
-    protected GameDescriptor(UUID id, Rule rule, State state, Player player1, Player player2) {
+    GameDescriptor(UUID id, Rule rule, State state, Player player1, Player player2) {
 
     }
 

@@ -8,7 +8,7 @@ public class OthelloRule extends Rule {
     /**
      * Constructs a OthelloRule
      */
-    protected OthelloRule() {
+    OthelloRule() {
 
     }
 
@@ -17,7 +17,7 @@ public class OthelloRule extends Rule {
      *
      * @param game Game played
      */
-    protected Board initializeBoard(Game game) {
+    Board initializeBoard(Game game) {
         Board retour = new Board(game);
 
         Disk[][] board = retour.getBoard();
@@ -47,8 +47,14 @@ public class OthelloRule extends Rule {
      * @param game Game played
      * @return The first Player to play in the given Game
      */
-    protected Player getFirstPlayer(Game game) {
-        return null;
+    Player getFirstPlayer(Game game) {
+        double randomNumber = Math.random();
+
+        if (randomNumber < 0.5){
+            return game.getPlayer1();
+        } else {
+            return game.getPlayer2();
+        }
     }
 
     /**
@@ -58,7 +64,7 @@ public class OthelloRule extends Rule {
      * @param player Player that plays
      * @return Array of the Positions where the given Player can play in the given Game
      */
-    protected Position[] getPlayablePositions(Game game, Player player) {
+    Position[] getPlayablePositions(Game game, Player player) {
         return null;
     }
 
@@ -67,7 +73,7 @@ public class OthelloRule extends Rule {
      *
      * @param game Game played
      */
-    protected void turnDisks(Game game) {
+    void turnDisks(Game game) {
 
     }
 
@@ -77,7 +83,7 @@ public class OthelloRule extends Rule {
      * @param game Game played
      * @return The Player that won the the given Game
      */
-    protected Player getWinner(Game game) {
+    Player getWinner(Game game) {
         Player retour = null;
 
         if(Counter.getNbPoint(game, game.getPlayer1()) > Counter.getNbPoint(game, game.getPlayer2())) {
@@ -97,7 +103,7 @@ public class OthelloRule extends Rule {
      * @param game Game played
      * @return The Player that lost the given Game
      */
-    protected Player getLoser(Game game) {
+    Player getLoser(Game game) {
         Player retour = null;
 
         if(Counter.getNbPoint(game, game.getPlayer1()) > Counter.getNbPoint(game, game.getPlayer2())) {
@@ -117,7 +123,7 @@ public class OthelloRule extends Rule {
      * @param game
      * @return true if the given Game is draw
      */
-    protected boolean isDraw(Game game) {
+    boolean isDraw(Game game) {
         boolean retour = false;
 
         if(Counter.getNbPoint(game, game.getPlayer1()) == Counter.getNbPoint(game, game.getPlayer2())) {

@@ -33,7 +33,7 @@ public class HumanPlayer extends Player {
      *
      * @param id The UUID of the HumanPlayer
      */
-    protected HumanPlayer(UUID id, Color color) {
+    HumanPlayer(UUID id, Color color) {
         super(color);
 
         this.idHumanPlayer = id;
@@ -55,7 +55,7 @@ public class HumanPlayer extends Player {
      * @param password Password of the HumanPlayer
      * @param name Name of the HumanPlayer
      */
-    protected void createAccount(String email, String password, String name) {
+    void createAccount(String email, String password, String name) {
 
     }
 
@@ -65,7 +65,7 @@ public class HumanPlayer extends Player {
      * @param email Email of the HumanPlayer
      * @param password Password of the HumanPlayer
      */
-    protected void removeAccount(String email, String password) {
+    void removeAccount(String email, String password) {
 
     }
 
@@ -74,7 +74,7 @@ public class HumanPlayer extends Player {
      *
      * @return A random Player to play against
      */
-    protected Player findRandomOpponent() {
+    Player findRandomOpponent() {
         return null;
     }
 

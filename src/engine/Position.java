@@ -10,12 +10,12 @@ public class Position {
     /**
      * Coordinate x
      */
-    protected int Xcoordinate;
+    private int Xcoordinate;
 
     /**
      * Coordinate Y
      */
-    protected int Ycoordinate;
+    private int Ycoordinate;
 
     /**
      * Constructs a position with two coordinates.
@@ -23,7 +23,7 @@ public class Position {
      * @param Xcoordinate Coordinate x
      * @param Ycoordinate Coordinate y
      */
-    public Position(int Xcoordinate, int Ycoordinate) {
+    Position(int Xcoordinate, int Ycoordinate) {
         this.Xcoordinate = Xcoordinate;
         this.Ycoordinate = Ycoordinate;
     }

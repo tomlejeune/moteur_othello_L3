@@ -85,7 +85,7 @@ public class Game {
      * @param player2 Second player of the Game
      * @param rule Rule of the Game
      */
-    public Game(Player player1, Player player2, Rule rule) {
+    Game(Player player1, Player player2, Rule rule) {
         this.changeSupport = new PropertyChangeSupport(this);
 
         //this.idGame = DAO...;
@@ -178,6 +178,18 @@ public class Game {
      */
     public int getNbPoints(Player player) {
         return Counter.getNbPoint(this, player);
+    }
+
+    /**
+     * Returns the number of point the Player would have
+     * if he plays the given position
+     *
+     * @param position The Position the player wants to play
+     * @param player The player who plays
+     * @return The number of point he would have
+     */
+    public int getNbPointsIfPlayed(Position position, Player player) {
+        return -1;
     }
 
     /**

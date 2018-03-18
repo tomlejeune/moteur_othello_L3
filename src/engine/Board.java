@@ -53,7 +53,7 @@ public class Board {
      *
      * @param game Game played
      */
-    protected Board(Game game) {
+    Board(Game game) {
         this.changeSupport = new PropertyChangeSupport(this);
 
         this.game = game;
@@ -64,7 +64,7 @@ public class Board {
      *
      * @return The Board of Disks
      */
-    protected Disk[][] getBoard() {
+    Disk[][] getBoard() {
         return this.board;
     }
 
@@ -73,7 +73,7 @@ public class Board {
      *
      * @param board The new Board of Disks
      */
-    protected void setBoard(Disk[][] board) {
+    void setBoard(Disk[][] board) {
         Disk[][] oldBoard = this.board;
         this.board = board;
 
@@ -97,7 +97,7 @@ public class Board {
      * @param player The Player that plays
      * @return Array of Positions where a Player placed his Disks during a Game
      */
-    protected Position[] getPositions(Game game, Player player) {
+    Position[] getPositions(Game game, Player player) {
         ArrayList<Position> positions = new ArrayList<Position>();
 
         for(int i = 0 ; i < board.length ; i++) {
@@ -125,7 +125,7 @@ public class Board {
      * @param position Position where to place the Disk
      * @return true if the Position exists and is not already taken
      */
-    protected boolean placeDisk(Player player, Position position) {
+    boolean placeDisk(Player player, Position position) {
         boolean retour = false;
 
         if(board[position.getXCoordinate()][position.getYCoordinate()] == null) {

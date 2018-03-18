@@ -30,7 +30,7 @@ public abstract class Player {
     /**
      * Constructs a Player by initializing its Disks.
      */
-    protected Player(Color color) {
+    Player(Color color) {
         this.changeSupport = new PropertyChangeSupport(this);
 
         this.disks = new Disk[32];
@@ -55,7 +55,7 @@ public abstract class Player {
      * @param position Position where to place the Disk
      * @return true if the Position exists and is not already taken
      */
-    protected boolean placeDisk(Position position) {
+    boolean placeDisk(Position position) {
         return false;
     }
 
