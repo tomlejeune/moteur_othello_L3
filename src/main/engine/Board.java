@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
 
+
 /**
  * Board of the Game. It has a Hashtable of Disks at a Position.
  * It notifies classes that listens to it when a changes occurs.
@@ -147,10 +148,11 @@ public class Board {
 
         String retour = "";
 
-        retour += " _______________________________";
+        retour += "     0   1   2   3   4   5   6   7\n";
+        retour += "    _______________________________";
 
         for(int i = 0 ; i < this.board.length ; i++) {
-            retour += "\n| ";
+            retour += "\n"+i+"  | ";
 
             for(int j = 0 ; j < this.board[i].length ; j++) {
                 if(this.board[j][i] == null) {
@@ -169,7 +171,7 @@ public class Board {
 
             }
 
-            retour += "\n|___|___|___|___|___|___|___|___|";
+            retour += "\n   |___|___|___|___|___|___|___|___|";
         }
 
         return retour;

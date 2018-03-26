@@ -37,8 +37,9 @@ public abstract class Rule {
      * Turns the Disks on the Board of the given Game.
      *
      * @param game Game played
+     * @param lastPositionPlayed Last Position played at the given Game
      */
-    abstract void turnDisks(Game game);
+    abstract void turnDisks(Game game, Position lastPositionPlayed);
 
     /**
      * Gets the Player that won the given Game.

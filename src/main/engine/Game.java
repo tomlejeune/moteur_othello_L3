@@ -88,7 +88,9 @@ public class Game {
     Game(Player player1, Player player2, Rule rule) {
         this.changeSupport = new PropertyChangeSupport(this);
 
-        //this.idGame = DAO...;
+
+
+        //this.idGame = ;
         this.player1 = player1;
         this.player2 = player2;
         this.rule = rule;
@@ -157,7 +159,7 @@ public class Game {
      * @return Array of the Positions where the given Player can play
      */
     public Position[] getPlayablePositions(Player player) {
-        return null;
+        return this.rule.getPlayablePositions(this, player);
     }
 
     /**
@@ -200,7 +202,7 @@ public class Game {
      */
     public void play(Player player, Position position) {
         this.board.placeDisk(player, position);
-        this.rule.turnDisks(this);
+        this.rule.turnDisks(this, position);
     }
 
     /**

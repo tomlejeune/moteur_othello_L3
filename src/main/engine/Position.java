@@ -45,6 +45,22 @@ public class Position {
     }
 
     /**
+     * Sets the x coordinate with the given one
+     * @param xCoordinate New x coordinate
+     */
+    void setXCoordinate(int xCoordinate) {
+        this.Xcoordinate = xCoordinate;
+    }
+
+    /**
+     * Sets the y coordinate with the given one
+     * @param yCoordinate New y coordinate
+     */
+    void setYCoordinate(int yCoordinate) {
+        this.Ycoordinate = yCoordinate;
+    }
+
+    /**
      * String version of a Position.
      *
      * @return String version of a Position
