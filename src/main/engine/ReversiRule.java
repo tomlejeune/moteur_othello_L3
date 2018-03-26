@@ -281,28 +281,44 @@ public class ReversiRule extends Rule {
      */
     void turnDisks(Game game, Position lastPositionPlayed) {
         Board b = game.getBoard();
+        Disk[][] boardDisks = b.getBoard();
         int x = lastPositionPlayed.getXCoordinate();
         int y = lastPositionPlayed.getYCoordinate();
         int lower;
         int diff;
 
-        Color c = b.getDisk(lastPositionPlayed).getColor();
         Position posTest = new Position(x,y);
+        Player currentPlayer;
+        Player notCurrentPlayer;
+        Disk[] currentPlayerDisks;
+
+        if (b.getDisk(lastPositionPlayed).getPlayer() == game.getPlayer1()) {
+            currentPlayer = game.getPlayer1();
+            notCurrentPlayer = game.getPlayer2();
+            currentPlayerDisks = currentPlayer.getDisks();
+        } else {
+            currentPlayer = game.getPlayer2();
+            notCurrentPlayer = game.getPlayer1();
+            currentPlayerDisks = currentPlayer.getDisks();
+        }
 
         // Vérification droite
         if (x < 7) {
             posTest.setXCoordinate(x+1);
             if (b.getDisk(posTest) != null) {
-                if (!(b.getDisk(posTest).getColor() == c)) {
+                //if (!(b.getDisk(posTest).getColor() == c)) {
+                if (b.getDisk(posTest).getPlayer() == notCurrentPlayer) {
                     posTest.setXCoordinate(x);
                     for (int i = x ; i < 7 ; i++) {
                         posTest.setXCoordinate(posTest.getXCoordinate()+1);
                         if (b.getDisk(posTest) != null) {
-                            if (b.getDisk(posTest).getColor() == c) {
+                            //if (b.getDisk(posTest).getColor() == c) {
+                            if (b.getDisk(posTest).getPlayer() == currentPlayer) {
                                 posTest.setXCoordinate(x);
                                 for (int j = x ; j < i ; j++) {
                                     posTest.setXCoordinate(posTest.getXCoordinate()+1);
-                                    b.getDisk(posTest).setColor(c);
+                                    //b.getDisk(posTest).setColor(c);
+                                    boardDisks[posTest.getXCoordinate()][posTest.getYCoordinate()] = currentPlayerDisks[game.getNbPoints(currentPlayer)];
                                 }
                                 break; // sortir du for
                             }
@@ -318,16 +334,19 @@ public class ReversiRule extends Rule {
         if (x > 0) {
             posTest.setXCoordinate(x-1);
             if (b.getDisk(posTest) != null) {
-                if (!(b.getDisk(posTest).getColor() == c)) {
+                //if (!(b.getDisk(posTest).getColor() == c)) {
+                if (b.getDisk(posTest).getPlayer() == notCurrentPlayer) {
                     posTest.setXCoordinate(x);
                     for (int i = x ; i > 0 ; i--) {
                         posTest.setXCoordinate(posTest.getXCoordinate()-1);
                         if (b.getDisk(posTest) != null) {
-                            if (b.getDisk(posTest).getColor() == c) {
+                            //if (b.getDisk(posTest).getColor() == c) {
+                            if (b.getDisk(posTest).getPlayer() == currentPlayer) {
                                 posTest.setXCoordinate(x);
                                 for (int j = x ; j > i ; j--) {
                                     posTest.setXCoordinate(posTest.getXCoordinate()-1);
-                                    b.getDisk(posTest).setColor(c);
+                                    //b.getDisk(posTest).setColor(c);
+                                    boardDisks[posTest.getXCoordinate()][posTest.getYCoordinate()] = currentPlayerDisks[game.getNbPoints(currentPlayer)];
                                 }
                                 break; // sortir du for
                             }
@@ -343,16 +362,19 @@ public class ReversiRule extends Rule {
         if (y > 0) {
             posTest.setYCoordinate(y-1);
             if (b.getDisk(posTest) != null) {
-                if (!(b.getDisk(posTest).getColor() == c)) {
+                //if (!(b.getDisk(posTest).getColor() == c)) {
+                if (b.getDisk(posTest).getPlayer() == notCurrentPlayer) {
                     posTest.setYCoordinate(y);
                     for (int i = y ; i > 0 ; i--) {
                         posTest.setYCoordinate(posTest.getYCoordinate()-1);
                         if (b.getDisk(posTest) != null) {
-                            if (b.getDisk(posTest).getColor() == c) {
+                            //if (b.getDisk(posTest).getColor() == c) {
+                            if (b.getDisk(posTest).getPlayer() == currentPlayer) {
                                 posTest.setYCoordinate(y);
                                 for (int j = y ; j > i ; j--) {
                                     posTest.setYCoordinate(posTest.getYCoordinate()-1);
-                                    b.getDisk(posTest).setColor(c);
+                                    //b.getDisk(posTest).setColor(c);
+                                    boardDisks[posTest.getXCoordinate()][posTest.getYCoordinate()] = currentPlayerDisks[game.getNbPoints(currentPlayer)];
                                 }
                                 break; // sortir du for
                             }
@@ -368,16 +390,19 @@ public class ReversiRule extends Rule {
         if (y < 7) {
             posTest.setYCoordinate(y+1);
             if (b.getDisk(posTest) != null) {
-                if (!(b.getDisk(posTest).getColor() == c)) {
+                //if (!(b.getDisk(posTest).getColor() == c)) {
+                if (b.getDisk(posTest).getPlayer() == notCurrentPlayer) {
                     posTest.setYCoordinate(y);
                     for (int i = y ; i < 7 ; i++) {
                         posTest.setYCoordinate(posTest.getYCoordinate()+1);
                         if (b.getDisk(posTest) != null) {
-                            if (b.getDisk(posTest).getColor() == c) {
+                            //if (b.getDisk(posTest).getColor() == c) {
+                            if (b.getDisk(posTest).getPlayer() == currentPlayer) {
                                 posTest.setYCoordinate(y);
                                 for (int j = y ; j < i ; j++) {
                                     posTest.setYCoordinate(posTest.getYCoordinate()+1);
-                                    b.getDisk(posTest).setColor(c);
+                                    //b.getDisk(posTest).setColor(c);
+                                    boardDisks[posTest.getXCoordinate()][posTest.getYCoordinate()] = currentPlayerDisks[game.getNbPoints(currentPlayer)];
                                 }
                                 break; // sortir du for
                             }
@@ -394,7 +419,8 @@ public class ReversiRule extends Rule {
             posTest.setXCoordinate(x+1);
             posTest.setYCoordinate(y+1);
             if (b.getDisk(posTest) != null) {
-                if (!(b.getDisk(posTest).getColor() == c)) {
+                //if (!(b.getDisk(posTest).getColor() == c)) {
+                if (b.getDisk(posTest).getPlayer() == notCurrentPlayer) {
                     posTest.setXCoordinate(x);
                     posTest.setYCoordinate(y);
                     if (7 - x > 7 - y) {
@@ -406,13 +432,15 @@ public class ReversiRule extends Rule {
                         posTest.setXCoordinate(posTest.getXCoordinate()+1);
                         posTest.setYCoordinate(posTest.getYCoordinate()+1);
                         if (b.getDisk(posTest) != null) {
-                            if (b.getDisk(posTest).getColor() == c) {
+                            //if (b.getDisk(posTest).getColor() == c) {
+                            if (b.getDisk(posTest).getPlayer() == currentPlayer) {
                                 posTest.setXCoordinate(x);
                                 posTest.setYCoordinate(y);
                                 for (int j = lower ; j < i ; j++) {
                                     posTest.setXCoordinate(posTest.getXCoordinate()+1);
                                     posTest.setYCoordinate(posTest.getYCoordinate()+1);
-                                    b.getDisk(posTest).setColor(c);
+                                    //b.getDisk(posTest).setColor(c);
+                                    boardDisks[posTest.getXCoordinate()][posTest.getYCoordinate()] = currentPlayerDisks[game.getNbPoints(currentPlayer)];
                                 }
                                 break; // sortir du for
                             }
@@ -428,7 +456,8 @@ public class ReversiRule extends Rule {
             posTest.setXCoordinate(x+1);
             posTest.setYCoordinate(y-1);
             if (b.getDisk(posTest) != null) {
-                if (!(b.getDisk(posTest).getColor() == c)) {
+                //if (!(b.getDisk(posTest).getColor() == c)) {
+                if (b.getDisk(posTest).getPlayer() == notCurrentPlayer) {
                     posTest.setXCoordinate(x);
                     posTest.setYCoordinate(y);
                     if (7 - x > y) {
@@ -442,13 +471,15 @@ public class ReversiRule extends Rule {
                         posTest.setXCoordinate(posTest.getXCoordinate()+1);
                         posTest.setYCoordinate(posTest.getYCoordinate()-1);
                         if (b.getDisk(posTest) != null) {
-                            if (b.getDisk(posTest).getColor() == c) {
+                            //if (b.getDisk(posTest).getColor() == c) {
+                            if (b.getDisk(posTest).getPlayer() == currentPlayer) {
                                 posTest.setXCoordinate(x);
                                 posTest.setYCoordinate(y);
                                 for (int j = 0 ; j < i ; j++) {
                                     posTest.setXCoordinate(posTest.getXCoordinate()+1);
                                     posTest.setYCoordinate(posTest.getYCoordinate()-1);
-                                    b.getDisk(posTest).setColor(c);
+                                    //b.getDisk(posTest).setColor(c);
+                                    boardDisks[posTest.getXCoordinate()][posTest.getYCoordinate()] = currentPlayerDisks[game.getNbPoints(currentPlayer)];
                                 }
                                 break; // sortir du for
                             }
@@ -465,7 +496,8 @@ public class ReversiRule extends Rule {
             posTest.setXCoordinate(x-1);
             posTest.setYCoordinate(y+1);
             if (b.getDisk(posTest) != null) {
-                if (!(b.getDisk(posTest).getColor() == c)) {
+                //if (!(b.getDisk(posTest).getColor() == c)) {
+                if (b.getDisk(posTest).getPlayer() == notCurrentPlayer) {
                     posTest.setXCoordinate(x);
                     posTest.setYCoordinate(y);
                     if (x > 7 - y) {
@@ -479,13 +511,15 @@ public class ReversiRule extends Rule {
                         posTest.setXCoordinate(posTest.getXCoordinate()-1);
                         posTest.setYCoordinate(posTest.getYCoordinate()+1);
                         if (b.getDisk(posTest) != null) {
-                            if (b.getDisk(posTest).getColor() == c) {
+                            //if (b.getDisk(posTest).getColor() == c) {
+                            if (b.getDisk(posTest).getPlayer() == currentPlayer) {
                                 posTest.setXCoordinate(x);
                                 posTest.setYCoordinate(y);
                                 for (int j = 0 ; j < i ; j++) {
                                     posTest.setXCoordinate(posTest.getXCoordinate()-1);
                                     posTest.setYCoordinate(posTest.getYCoordinate()+1);
-                                    b.getDisk(posTest).setColor(c);
+                                    //b.getDisk(posTest).setColor(c);
+                                    boardDisks[posTest.getXCoordinate()][posTest.getYCoordinate()] = currentPlayerDisks[game.getNbPoints(currentPlayer)];
                                 }
                                 break; // sortir du for
                             }
@@ -502,7 +536,8 @@ public class ReversiRule extends Rule {
             posTest.setXCoordinate(x-1);
             posTest.setYCoordinate(y-1);
             if (b.getDisk(posTest) != null) {
-                if (!(b.getDisk(posTest).getColor() == c)) {
+                //if (!(b.getDisk(posTest).getColor() == c)) {
+                if (b.getDisk(posTest).getPlayer() == notCurrentPlayer) {
                     posTest.setXCoordinate(x);
                     posTest.setYCoordinate(y);
                     if (x > y) {
@@ -514,13 +549,15 @@ public class ReversiRule extends Rule {
                         posTest.setXCoordinate(posTest.getXCoordinate()-1);
                         posTest.setYCoordinate(posTest.getYCoordinate()-1);
                         if (b.getDisk(posTest) != null) {
-                            if (b.getDisk(posTest).getColor() == c) {
+                            //if (b.getDisk(posTest).getColor() == c) {
+                            if (b.getDisk(posTest).getPlayer() == currentPlayer) {
                                 posTest.setXCoordinate(x);
                                 posTest.setYCoordinate(y);
                                 for (int j = lower ; j > i ; j--) {
                                     posTest.setXCoordinate(posTest.getXCoordinate()-1);
                                     posTest.setYCoordinate(posTest.getYCoordinate()-1);
-                                    b.getDisk(posTest).setColor(c);
+                                    //b.getDisk(posTest).setColor(c);
+                                    boardDisks[posTest.getXCoordinate()][posTest.getYCoordinate()] = currentPlayerDisks[game.getNbPoints(currentPlayer)];
                                 }
                                 break; // sortir du for
                             }
@@ -532,7 +569,7 @@ public class ReversiRule extends Rule {
             posTest.setYCoordinate(y);
         }
 
-        game.getBoard().setBoard(b.getBoard());
+        game.getBoard().setBoard(boardDisks);
     }
 
     /**

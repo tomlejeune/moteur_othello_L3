@@ -15,6 +15,8 @@ public class MainTest {
 
         System.out.println("\nTEST : \n");
 
+        game.play(player1, new Position(5, 3));
+
         System.out.println(game.getBoard().toString());
 
         Position[] positionsPlayer1 = game.getPositions(player1);

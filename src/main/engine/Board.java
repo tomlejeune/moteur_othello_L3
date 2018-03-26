@@ -133,7 +133,7 @@ public class Board {
             retour = true;
 
             Disk[] disksPlayer = player.getDisks();
-            board[position.getXCoordinate()][position.getYCoordinate()] = disksPlayer[2];
+            board[position.getXCoordinate()][position.getYCoordinate()] = disksPlayer[game.getNbPoints(player)];
         }
 
         return retour;

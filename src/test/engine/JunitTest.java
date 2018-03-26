@@ -111,6 +111,8 @@ public class JunitTest {
 
         assertEquals(5, positionsPlayer1[0].getXCoordinate());
         assertEquals(3, positionsPlayer1[0].getYCoordinate());
+
+        assertEquals(0, positionsPlayer2.length);
     }
 
     @Test
@@ -144,7 +146,29 @@ public class JunitTest {
         assertEquals(2, possiblePositionsPlayer2[3].getXCoordinate());
         assertEquals(3, possiblePositionsPlayer2[3].getYCoordinate());
 
-        assertEquals(true, rule.isDraw(game));
+        Position positionPlayed = new Position(5, 3);
+
+        game.getBoard().placeDisk(player1, positionPlayed);
+        rule.turnDisks(game, positionPlayed);
+
+        Position[] positionsPlayer1 = game.getPositions(player1);
+        Position[] positionsPlayer2 = game.getPositions(player2);
+
+        assertEquals(3, positionsPlayer1[0].getXCoordinate());
+        assertEquals(3, positionsPlayer1[0].getYCoordinate());
+        assertEquals(4, positionsPlayer1[1].getXCoordinate());
+        assertEquals(3, positionsPlayer1[1].getYCoordinate());
+        assertEquals(4, positionsPlayer1[2].getXCoordinate());
+        assertEquals(4, positionsPlayer1[2].getXCoordinate());
+        assertEquals(5, positionsPlayer1[3].getXCoordinate());
+        assertEquals(3, positionsPlayer1[3].getYCoordinate());
+
+        assertEquals(3, positionsPlayer2[0].getXCoordinate());
+        assertEquals(4, positionsPlayer2[0].getYCoordinate());
+
+        assertEquals(player1, rule.getWinner(game));
+        assertEquals(player2, rule.getLoser(game));
+        assertEquals(false, rule.isDraw(game));
     }
 
     @Test
@@ -178,6 +202,21 @@ public class JunitTest {
         assertEquals(4, possiblePositionsPlayer2[3].getXCoordinate());
         assertEquals(3, possiblePositionsPlayer2[3].getYCoordinate());
 
-        assertEquals(true, rule.isDraw(game));
+        Position positionPlayed = new Position(3, 3);
+
+        game.getBoard().placeDisk(player1, positionPlayed);
+        rule.turnDisks(game, positionPlayed);
+
+        Position[] positionsPlayer1 = game.getPositions(player1);
+        Position[] positionsPlayer2 = game.getPositions(player2);
+
+        assertEquals(3, positionsPlayer1[0].getXCoordinate());
+        assertEquals(3, positionsPlayer1[0].getYCoordinate());
+
+        assertEquals(0, positionsPlayer2.length);
+
+        assertEquals(player1, rule.getWinner(game));
+        assertEquals(player2, rule.getLoser(game));
+        assertEquals(false, rule.isDraw(game));
     }
 }
