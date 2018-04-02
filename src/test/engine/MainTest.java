@@ -6,8 +6,8 @@ import java.util.UUID;
 public class MainTest {
 
     public static void main(String[] args) {
-        Player player1 = new HumanPlayer(UUID.randomUUID(), Color.WHITE);
-        Player player2 = new HumanPlayer(UUID.randomUUID(), Color.BLACK);
+        Player player1 = new HumanPlayer(UUID.randomUUID(), "", "", "");
+        Player player2 = new HumanPlayer(UUID.randomUUID(), "", "", "");
 
         Rule rule = new OthelloRule();
 

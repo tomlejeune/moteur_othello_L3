@@ -1,10 +1,11 @@
 package engine;
 
 import java.awt.Color;
+import java.util.UUID;
 
 public abstract class Bot extends Player {
 
-    Bot(Color color) {
-        super(color);
+    Bot(UUID id, String nickname) {
+        super(id, nickname);
     }
 }

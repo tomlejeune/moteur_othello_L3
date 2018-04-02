@@ -12,22 +12,19 @@ public class EngineBridge {
      * Creates a non-persisted HumanPlayer
      * @return The HumanPlayer instance
      */
-    public static HumanPlayer createHumanPlayer(Color color) {
-        return new HumanPlayer(UUID.randomUUID(), color);
+    public static HumanPlayer createHumanPlayer(String nickname) {
+        return createHumanPlayer(null, null, nickname);
     }
 
     /**
      * Creates a persisted HumanPlayer
      * @param mail The mail address of the player to create
-     * @param password The password of the player to create
-     * @param name The name of the player to create
+     * @param hashPassword The password of the player to create
+     * @param nickname The name of the player to create
      * @return The HumanPlayer instance
      */
-    public static HumanPlayer createHumanPlayer(String mail, String password, String name, Color color) {
-        HumanPlayer ret = createHumanPlayer(color);
-        ret.createAccount(mail, password, name);
-
-        return ret;
+    public static HumanPlayer createHumanPlayer(String mail, String hashPassword, String nickname) {
+        return new HumanPlayer(UUID.randomUUID(), nickname, null, null);
     }
 
     /**

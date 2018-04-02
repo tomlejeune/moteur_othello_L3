@@ -41,7 +41,13 @@ public class GameDescriptor {
      * @param player2 Second Player of the Game
      */
     GameDescriptor(UUID id, Rule rule, State state, Player player1, Player player2) {
+        this.id = id;
+        this.rule = rule;
+        this.state = state;
 
+        this.playersScores = new Hashtable<Player, Integer>();
+        //this.playersScores.put(player1, Counter.getNbPoint(DAO.getGame(id), player1));
+        //this.playersScores.put(player2, Counter.getNbPoint(DAO.getGame(id), player2));
     }
 
     /**

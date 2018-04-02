@@ -13,6 +13,11 @@ import java.beans.PropertyChangeListener;
 public class Disk {
 
     /**
+     * Name of the property "game".
+     */
+    private static final String GAME_PROPERTY = "Game";
+
+    /**
      * Name of the property "player".
      */
     public static final String PLAYER_PROPERTY = "Player";
@@ -30,6 +35,11 @@ public class Disk {
     /**
      * Player that owns the Disk.
      */
+    private Game game;
+
+    /**
+     * Player that owns the Disk.
+     */
     private Player player;
 
     /**
@@ -43,10 +53,21 @@ public class Disk {
      * @param player The Player that owns the Disk
      * @param color The color of the Disk
      */
-    Disk(Player player, Color color) {
+    Disk(Game game, Player player, Color color) {
         this.changeSupport = new PropertyChangeSupport(this);
+
+        this.game = game;
         this.player = player;
         this.color = color;
+    }
+
+    /**
+     * Gets the Player that owns the Disk.
+     *
+     * @return The Player that owns the Disk
+     */
+    public Game getGame() {
+        return this.game;
     }
 
     /**

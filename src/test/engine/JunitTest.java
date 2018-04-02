@@ -9,8 +9,8 @@ public class JunitTest {
 
     @Test
     public void testCounter() {
-        Player player1 = new HumanPlayer(UUID.randomUUID(), Color.BLACK);
-        Player player2 = new HumanPlayer(UUID.randomUUID(), Color.WHITE);
+        Player player1 = new HumanPlayer(UUID.randomUUID(), "", "", "");
+        Player player2 = new HumanPlayer(UUID.randomUUID(), "", "", "");
         Rule rule = new OthelloRule();
         Game game = new Game(player1, player2, rule);
 
@@ -28,8 +28,8 @@ public class JunitTest {
 
     @Test
     public void testState() {
-        Player player1 = new HumanPlayer(UUID.randomUUID(), Color.BLACK);
-        Player player2 = new HumanPlayer(UUID.randomUUID(), Color.WHITE);
+        Player player1 = new HumanPlayer(UUID.randomUUID(), "", "", "");
+        Player player2 = new HumanPlayer(UUID.randomUUID(), "", "", "");
         Rule rule = new OthelloRule();
         Game game = new Game(player1, player2, rule);
 
@@ -38,20 +38,30 @@ public class JunitTest {
 
     @Test
     public void testDisk() {
-        Player player1 = new HumanPlayer(UUID.randomUUID(), Color.BLACK);
+        Player player1 = new HumanPlayer(UUID.randomUUID(), "", "", "");
+        Player player2 = new HumanPlayer(UUID.randomUUID(), "", "", "");
+        Rule rule = new OthelloRule();
+        Game game = new Game(player1, player2, rule);
 
-        Disk[] disksPlayer = player1.getDisks();
+        Disk[] disksPlayer1 = player1.getDisks();
 
-        for(int i = 0 ; i < disksPlayer.length ; i++) {
-            assertEquals(player1, disksPlayer[i].getPlayer());
-            assertEquals(Color.BLACK, disksPlayer[i].getColor());
+        for(int i = 0 ; i < disksPlayer1.length ; i++) {
+            assertEquals(player1, disksPlayer1[i].getPlayer());
+            assertEquals(Color.WHITE, disksPlayer1[i].getColor());
+        }
+
+        Disk[] disksPlayer2 = player2.getDisks();
+
+        for(int i = 0 ; i < disksPlayer2.length ; i++) {
+            assertEquals(player2, disksPlayer2[i].getPlayer());
+            assertEquals(Color.BLACK, disksPlayer2[i].getColor());
         }
     }
 
     @Test
     public void testBoardOthello() {
-        Player player1 = new HumanPlayer(UUID.randomUUID(), Color.BLACK);
-        Player player2 = new HumanPlayer(UUID.randomUUID(), Color.WHITE);
+        Player player1 = new HumanPlayer(UUID.randomUUID(), "", "", "");
+        Player player2 = new HumanPlayer(UUID.randomUUID(), "", "", "");
         Rule rule = new OthelloRule();
         Game game = new Game(player1, player2, rule);
         Board b = game.getBoard();
@@ -92,8 +102,8 @@ public class JunitTest {
 
     @Test
     public void testBoardReversi() {
-        Player player1 = new HumanPlayer(UUID.randomUUID(), Color.BLACK);
-        Player player2 = new HumanPlayer(UUID.randomUUID(), Color.WHITE);
+        Player player1 = new HumanPlayer(UUID.randomUUID(), "", "", "");
+        Player player2 = new HumanPlayer(UUID.randomUUID(), "", "", "");
         Rule rule = new ReversiRule();
         Game game = new Game(player1, player2, rule);
         Board b = game.getBoard();
@@ -117,8 +127,8 @@ public class JunitTest {
 
     @Test
     public void testRuleOthello() {
-        Player player1 = new HumanPlayer(UUID.randomUUID(), Color.BLACK);
-        Player player2 = new HumanPlayer(UUID.randomUUID(), Color.WHITE);
+        Player player1 = new HumanPlayer(UUID.randomUUID(), "", "", "");
+        Player player2 = new HumanPlayer(UUID.randomUUID(), "", "", "");
         Rule rule = new OthelloRule();
         Game game = new Game(player1, player2, rule);
 
@@ -173,8 +183,8 @@ public class JunitTest {
 
     @Test
     public void testRuleReversi() {
-        Player player1 = new HumanPlayer(UUID.randomUUID(), Color.BLACK);
-        Player player2 = new HumanPlayer(UUID.randomUUID(), Color.WHITE);
+        Player player1 = new HumanPlayer(UUID.randomUUID(), "", "", "");
+        Player player2 = new HumanPlayer(UUID.randomUUID(), "", "", "");
         Rule rule = new ReversiRule();
         Game game = new Game(player1, player2, rule);
 

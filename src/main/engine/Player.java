@@ -1,6 +1,7 @@
 package engine;
 
-import java.awt.Color;
+import java.awt.*;
+import java.util.UUID;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
 
@@ -13,6 +14,16 @@ import java.beans.PropertyChangeListener;
 public abstract class Player {
 
     /**
+     * Name of the property "playerUUID".
+     */
+    private final static String ID_PLAYER_PROPERTY = "PlayerUUID";
+
+    /**
+     * Name of the property "nicknamePlayer".
+     */
+    private final static String NICKNAME_PLAYER_PROPERTY = "NicknamePlayer";
+
+    /**
      * Name of the property "disks"
      */
     private final static String DISKS_PROPERTY = "Disks";
@@ -23,6 +34,16 @@ public abstract class Player {
     private PropertyChangeSupport changeSupport;
 
     /**
+     * UUID of a Player which makes it unique.
+     */
+    private UUID id;
+
+    /**
+     * Nickname of a Player.
+     */
+    private String nickname;
+
+    /**
      * Disks of a Player
      */
     private Disk[] disks;
@@ -30,14 +51,30 @@ public abstract class Player {
     /**
      * Constructs a Player by initializing its Disks.
      */
-    Player(Color color) {
+    Player(UUID id, String nickname) {
         this.changeSupport = new PropertyChangeSupport(this);
 
-        this.disks = new Disk[32];
+        this.id = id;
+        this.nickname = nickname;
+        this.disks = new Disk[64];
+    }
 
-        for(int i  = 0 ; i < this.disks.length ; i++) {
-            this.disks[i] = new Disk(this, color);
-        }
+    /**
+     * Gets the UUID of a Player.
+     *
+     * @return The UUID of a Player
+     */
+    public UUID getPlayerUUID() {
+        return this.id;
+    }
+
+    /**
+     * Gets the nickname of a Player.
+     *
+     * @return The nickname of a Player
+     */
+    public String getNicknamePlayer() {
+        return this.nickname;
     }
 
     /**
@@ -47,6 +84,12 @@ public abstract class Player {
      */
     public Disk[] getDisks() {
         return this.disks;
+    }
+
+    void initializeDisks(Game game, Color color) {
+        for(int i  = 0 ; i < this.disks.length ; i++) {
+            this.disks[i] = new Disk(game, this, color);
+        }
     }
 
     /**

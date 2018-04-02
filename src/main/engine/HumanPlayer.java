@@ -1,7 +1,6 @@
 package engine;
 
 import java.util.UUID;
-import java.awt.Color;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
 
@@ -14,9 +13,14 @@ import java.beans.PropertyChangeListener;
 public class HumanPlayer extends Player {
 
     /**
-     * Name of the property "idHumanPlayer".
+     * Name of the property "hashPassword"
      */
-    private final static String ID_HUMAN_PLAYER_PROPERTY = "IdHumanPlayer";
+    private final static String HASH_PASSWORD_PROPERTY = "HashPassword";
+
+    /**
+     * Name of the property "mail"
+     */
+    private final static String MAIL_PROPERTY = "Mail";
 
     /**
      * Listener support.
@@ -24,28 +28,43 @@ public class HumanPlayer extends Player {
     private PropertyChangeSupport changeSupport;
 
     /**
-     * UUID of a HumanPlayer which makes it unique.
+     * Mail of a HumanPlayer.
      */
-    private UUID idHumanPlayer;
+    private String mail;
+
+    /**
+     * Password of a HumanPlayer.
+     */
+    private String hashPassword;
 
     /**
      * Constructs a HumanPlayer with an UUID which makes it unique.
      *
      * @param id The UUID of the HumanPlayer
      */
-    HumanPlayer(UUID id, Color color) {
-        super(color);
+    HumanPlayer(UUID id, String nickname, String mail, String hashPassword) {
+        super(id, nickname);
 
-        this.idHumanPlayer = id;
+        this.mail = mail;
+        this.hashPassword = hashPassword;
     }
 
     /**
-     * Gets the UUID of the HumanPlayer.
+     * Gets the mail of the HumanPlayer.
      *
-     * @return The UUID of the HumanPlayer
+     * @return The mail of the HumanPlayer
      */
-    public UUID getIdHumanPlayer() {
-        return this.idHumanPlayer;
+    public String getMail() {
+        return this.mail;
+    }
+
+    /**
+     * Gets the password of the HumanPlayer.
+     *
+     * @return The password of the HumanPlayer
+     */
+    public String getHashPassword() {
+        return this.hashPassword;
     }
 
     /**
