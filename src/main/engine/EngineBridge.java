@@ -1,5 +1,8 @@
 package engine;
 
+import fr.univubs.inf1603.othello.DAO.DAO;
+import fr.univubs.inf1603.othello.DAOFile.DAOFile;
+
 import java.util.UUID;
 import java.awt.Color;
 
@@ -24,7 +27,19 @@ public class EngineBridge {
      * @return The HumanPlayer instance
      */
     public static HumanPlayer createHumanPlayer(String mail, String hashPassword, String nickname) {
-        return new HumanPlayer(UUID.randomUUID(), nickname, null, null);
+        return new HumanPlayer(UUID.randomUUID(), nickname, mail, hashPassword);
+    }
+
+    /**
+     * Creates a persisted HumanPlayer
+     * @param id The UUID of the Player
+     * @param mail The mail address of the player to create
+     * @param hashPassword The password of the player to create
+     * @param nickname The name of the player to create
+     * @return The HumanPlayer instance
+     */
+    public static HumanPlayer createHumanPlayer(UUID id, String mail, String hashPassword, String nickname) {
+        return new HumanPlayer(id, nickname, mail, hashPassword);
     }
 
     /**
@@ -61,20 +76,44 @@ public class EngineBridge {
      * @return The Rule instance
      */
     public static Rule getRule(EnumRule enumRule) {
-        // TODO
-        return null;
+        if(enumRule == EnumRule.OTHELLO) {
+            return new OthelloRule();
+        }
+
+        else if(enumRule == EnumRule.REVERSI) {
+            return new ReversiRule();
+        }
+
+        else {
+            return null;
+        }
     }
 
     /**
      * Creates a Game with the given players and rule
+     *
+     * @param id UUID of the Game
      * @param player1 The first Player
      * @param player2 The second Player
      * @param rule The rule for the game
      * @return The Game instance
      */
-    public static Game createGame(Player player1, Player player2, Rule rule) {
-        // TODO
-        return null;
+    public static Game createGame(UUID id, Player player1, Player player2, Rule rule) {
+        return new Game(id, player1, player2, rule);
+    }
+
+    /**
+     * Creates a Game with the given players and rule
+     *
+     * @param id UUID of the Game
+     * @param player1 The first Player
+     * @param player2 The second Player
+     * @param rule The rule for the game
+     * @param board Disks played in the Game
+     * @return The Game instance
+     */
+    public static Game createGame(UUID id, Player player1, Player player2, Rule rule, Disk[][] board) {
+        return new Game(id, player1, player2, rule, board);
     }
 
     /**
@@ -92,6 +131,9 @@ public class EngineBridge {
      * @param player The player to save
      */
     public static void savePlayer(Player player) {
+        DAOFile daoFile = new DAOFile();
+
+        //daoFile.savePlayer(player);
         // TODO
     }
 
@@ -159,5 +201,4 @@ public class EngineBridge {
         // TODO
         return null;
     }
-
 }

@@ -13,14 +13,19 @@ import java.beans.PropertyChangeListener;
 public class HumanPlayer extends Player {
 
     /**
+     * Name of the property "mail"
+     */
+    private final static String MAIL_PROPERTY = "Mail";
+
+    /**
      * Name of the property "hashPassword"
      */
     private final static String HASH_PASSWORD_PROPERTY = "HashPassword";
 
     /**
-     * Name of the property "mail"
+     * Name of the property "forfeit"
      */
-    private final static String MAIL_PROPERTY = "Mail";
+    private final static String FORFEIT_PROPERTY = "Forfeit";
 
     /**
      * Listener support.
@@ -38,6 +43,11 @@ public class HumanPlayer extends Player {
     private String hashPassword;
 
     /**
+     * True if a Player forfeits
+     */
+    private boolean forfeit;
+
+    /**
      * Constructs a HumanPlayer with an UUID which makes it unique.
      *
      * @param id The UUID of the HumanPlayer
@@ -47,6 +57,7 @@ public class HumanPlayer extends Player {
 
         this.mail = mail;
         this.hashPassword = hashPassword;
+        this.forfeit = false;
     }
 
     /**
@@ -65,6 +76,15 @@ public class HumanPlayer extends Player {
      */
     public String getHashPassword() {
         return this.hashPassword;
+    }
+
+    /**
+     * Gets if a HumanPlayer forfeits.
+     *
+     * @return If a HumanPlayer forfeits
+     */
+    public boolean getForfeit() {
+        return this.forfeit;
     }
 
     /**
@@ -103,7 +123,9 @@ public class HumanPlayer extends Player {
      * @param game Game played
      */
     public void forfeit(Game game) {
+        this.forfeit = true;
 
+        game.setState(State.END);
     }
 
     /**

@@ -14,19 +14,24 @@ import java.beans.PropertyChangeListener;
 public abstract class Player {
 
     /**
-     * Name of the property "playerUUID".
+     * Name of the property "id".
      */
-    private final static String ID_PLAYER_PROPERTY = "PlayerUUID";
+    private final static String ID_PLAYER_PROPERTY = "Id";
 
     /**
-     * Name of the property "nicknamePlayer".
+     * Name of the property "nickname".
      */
-    private final static String NICKNAME_PLAYER_PROPERTY = "NicknamePlayer";
+    private final static String NICKNAME_PROPERTY = "Nickname";
 
     /**
      * Name of the property "disks"
      */
     private final static String DISKS_PROPERTY = "Disks";
+
+    /**
+     * Name of the property "disks"
+     */
+    private final static String CAN_PLAY_PROPERTY = "CanPlay";
 
     /**
      * Listener support.
@@ -49,14 +54,20 @@ public abstract class Player {
     private Disk[] disks;
 
     /**
+     * True if a Player can play
+     */
+    private boolean canPlay;
+
+    /**
      * Constructs a Player by initializing its Disks.
      */
-    Player(UUID id, String nickname) {
+    protected Player(UUID id, String nickname) {
         this.changeSupport = new PropertyChangeSupport(this);
 
         this.id = id;
         this.nickname = nickname;
         this.disks = new Disk[64];
+        this.canPlay = true;
     }
 
     /**
@@ -64,7 +75,7 @@ public abstract class Player {
      *
      * @return The UUID of a Player
      */
-    public UUID getPlayerUUID() {
+    public UUID getId() {
         return this.id;
     }
 
@@ -73,7 +84,7 @@ public abstract class Player {
      *
      * @return The nickname of a Player
      */
-    public String getNicknamePlayer() {
+    public String getNickname() {
         return this.nickname;
     }
 
@@ -86,20 +97,34 @@ public abstract class Player {
         return this.disks;
     }
 
+    /**
+     * Gets if a Player can play.
+     *
+     * @return If a Player can play
+     */
+    public boolean getCanPlay() {
+        return this.canPlay;
+    }
+
+    /**
+     * Sets if a Player can play.
+     *
+     * @param canPlay true if a Player can play
+     */
+    void setCanPlay(boolean canPlay) {
+        this.canPlay = canPlay;
+    }
+
+    /**
+     * Initializes the Disks of the Player at the given Game with the given Color
+     *
+     * @param game The Game played
+     * @param color The Color of the Disks
+     */
     void initializeDisks(Game game, Color color) {
         for(int i  = 0 ; i < this.disks.length ; i++) {
             this.disks[i] = new Disk(game, this, color);
         }
-    }
-
-    /**
-     * Places a Disk on the Board at the given Position. Returns true if the Position exists and is not already taken.
-     *
-     * @param position Position where to place the Disk
-     * @return true if the Position exists and is not already taken
-     */
-    boolean placeDisk(Position position) {
-        return false;
     }
 
     /**

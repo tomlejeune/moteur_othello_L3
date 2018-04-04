@@ -556,12 +556,22 @@ public class OthelloRule extends Rule {
     Player getWinner(Game game) {
         Player retour = null;
 
-        if(Counter.getNbPoint(game, game.getPlayer1()) > Counter.getNbPoint(game, game.getPlayer2())) {
+        if((game.getPlayer1() instanceof HumanPlayer) &&((HumanPlayer) game.getPlayer1()).getForfeit()) {
+            retour = game.getPlayer2();
+        }
+
+        else if((game.getPlayer2() instanceof HumanPlayer) && ((HumanPlayer) game.getPlayer2()).getForfeit()) {
             retour = game.getPlayer1();
         }
 
         else {
-            retour = game.getPlayer2();
+            if(Counter.getNbPoint(game, game.getPlayer1()) > Counter.getNbPoint(game, game.getPlayer2())) {
+                retour = game.getPlayer1();
+            }
+
+            else {
+                retour = game.getPlayer2();
+            }
         }
 
         return retour;
@@ -576,12 +586,22 @@ public class OthelloRule extends Rule {
     Player getLoser(Game game) {
         Player retour = null;
 
-        if(Counter.getNbPoint(game, game.getPlayer1()) > Counter.getNbPoint(game, game.getPlayer2())) {
+        if((game.getPlayer1() instanceof HumanPlayer) &&((HumanPlayer) game.getPlayer1()).getForfeit()) {
+            retour = game.getPlayer1();
+        }
+
+        else if((game.getPlayer2() instanceof HumanPlayer) && ((HumanPlayer) game.getPlayer2()).getForfeit()) {
             retour = game.getPlayer2();
         }
 
         else {
-            retour = game.getPlayer1();
+            if(Counter.getNbPoint(game, game.getPlayer1()) > Counter.getNbPoint(game, game.getPlayer2())) {
+                retour = game.getPlayer2();
+            }
+
+            else {
+                retour = game.getPlayer1();
+            }
         }
 
         return retour;
@@ -596,8 +616,18 @@ public class OthelloRule extends Rule {
     boolean isDraw(Game game) {
         boolean retour = false;
 
-        if(Counter.getNbPoint(game, game.getPlayer1()) == Counter.getNbPoint(game, game.getPlayer2())) {
-            retour = true;
+        if((game.getPlayer1() instanceof HumanPlayer) &&((HumanPlayer) game.getPlayer1()).getForfeit()) {
+            retour = false;
+        }
+
+        else if((game.getPlayer2() instanceof HumanPlayer) && ((HumanPlayer) game.getPlayer2()).getForfeit()) {
+            retour = false;
+        }
+
+        else {
+            if(Counter.getNbPoint(game, game.getPlayer1()) == Counter.getNbPoint(game, game.getPlayer2())) {
+                retour = true;
+            }
         }
 
         return retour;

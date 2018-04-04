@@ -11,7 +11,7 @@ public class MainTest {
 
         Rule rule = new OthelloRule();
 
-        Game game = new Game(player1, player2, rule);
+        Game game = new Game(UUID.randomUUID(), player1, player2, rule);
 
         System.out.println("\nTEST : \n");
 

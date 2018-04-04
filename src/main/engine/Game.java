@@ -12,7 +12,7 @@ import java.awt.Color;
  *
  * @version 1.0
  */
-public class Game {
+public class Game implements Cloneable {
 
     /**
      * Name of the property "idGame".
@@ -92,14 +92,15 @@ public class Game {
     /**
      * Constructs a Game with two Players and a Rule. It also initializes all other attributes.
      *
+     * @param id UUID of the Game
      * @param player1 First player of the Game
      * @param player2 Second player of the Game
      * @param rule Rule of the Game
      */
-    Game(Player player1, Player player2, Rule rule) {
+    Game(UUID id, Player player1, Player player2, Rule rule) {
         this.changeSupport = new PropertyChangeSupport(this);
 
-        //this.idGame = ;
+        this.idGame = id;
         this.rule = rule;
 
         this.player1 = player1;
@@ -110,6 +111,32 @@ public class Game {
         this.currentPlayer = this.rule.getFirstPlayer(this);
         this.state = State.INIT;
         this.board = this.rule.initializeBoard(this);
+    }
+
+    /**
+     * Constructs a Game with two Players and a Rule. It also initializes all other attributes.
+     *
+     * @param id UUID of the Game
+     * @param player1 First player of the Game
+     * @param player2 Second player of the Game
+     * @param rule Rule of the Game
+     * @param board Disks played in the Game
+     */
+    Game(UUID id, Player player1, Player player2, Rule rule, Disk[][] board) {
+        this.changeSupport = new PropertyChangeSupport(this);
+
+        this.idGame = id;
+        this.rule = rule;
+
+        this.player1 = player1;
+        this.player2 = player2;
+        this.player1.initializeDisks(this, Color.WHITE);
+        this.player2.initializeDisks(this, Color.BLACK);
+
+        this.currentPlayer = this.rule.getFirstPlayer(this);
+        this.state = State.INIT;
+        this.board = this.rule.initializeBoard(this);
+        this.board.setBoard(board);
     }
 
     /**
@@ -167,6 +194,15 @@ public class Game {
     }
 
     /**
+     * Sets the State of the Game.
+     *
+     * @param state New state of the Game.
+     */
+    void setState(State state) {
+        this.state = state;
+    }
+
+    /**
      * Gets the Board of the Game.
      *
      * @return The Board of the Game
@@ -218,104 +254,125 @@ public class Game {
         int currentX = position.getXCoordinate();
         int currentY = position.getYCoordinate();
 
+        Disk[][] b = this.board.getBoard();
+
         Position[] playablePositions = this.rule.getPlayablePositions(this, player);
 
-        /*for (int i=0 ; i < playablePositions.length ; i++) {
+        int j = 0;
+
+        for(int i = 0 ; i < playablePositions.length ; i++) {
 
             //is the position playable ?
-            if (position == playablePositions[i]) {
+            if(position == playablePositions[i]) {
                 nbPoint++; //point of the disk itself
 
                 //North position
-                if ((currentY != 0) && (board[currentX][currentY-1].getPlayer() != player) && (board[currentX][currentY-1] != null)) {
+                if((b[currentX][currentY-1] != null) && (currentY != 0) && (b[currentX][currentY-1].getPlayer() != player)) {
                     j = 2;
-                    while (((currentY-j) > 0) && (board[currentX][currentY-j] != null) && (board[currentX][currentY-j].getPlayer() != player)) {
+
+                    while((b[currentX][currentY-j] != null) && ((currentY-j) > 0) && (b[currentX][currentY-j].getPlayer() != player)) {
                         j++;
                     }
-                    if (((currentY-j) >= 0) && (board[currentX][currentY-j].getPlayer() == player)) {
-                        nbPoint=j-1;
+
+                    if((b[currentX][currentY-j] != null) && ((currentY-j) >= 0) && (b[currentX][currentY-j].getPlayer() == player)) {
+                        nbPoint = j-1;
                     }
                 }
 
                 //South position
-                if ((currentY != 7) && (board[currentX][currentY+1].getPlayer() != player) && (board[currentX][currentY+1] != null)) {
+                if((b[currentX][currentY+1] != null) && (currentY != 7) && (b[currentX][currentY+1].getPlayer() != player)) {
                     j = 2;
-                    while (((currentY+j) < 7) && (board[currentX][currentY+j] != null) && (board[currentX][currentY+j].getPlayer() != player)) {
+
+                    while((b[currentX][currentY+j] != null) && ((currentY+j) < 7) && (b[currentX][currentY+j].getPlayer() != player)) {
                         j++;
                     }
-                    if (((currentY+j) <= 7) && (board[currentX][currentY+j].getPlayer() == player)) {
-                        nbPoint=j-1;
+
+                    if ((b[currentX][currentY+j] != null) && ((currentY+j) <= 7) && (b[currentX][currentY+j].getPlayer() == player)) {
+                        nbPoint = j-1;
                     }
                 }
 
                 //West position
-                if ((currentX != 0) && (board[currentX-1][currentY].getPlayer() != player) && (board[currentX-1][currentY] != null)) {
+                if((b[currentX-1][currentY] != null) && (currentX != 0) && (b[currentX-1][currentY].getPlayer() != player)) {
                     j = 2;
-                    while (((currentX-j) > 0) && (board[currentX-j][currentY] != null) && (board[currentX-j][currentY].getPlayer() != player)) {
+
+                    while((b[currentX-j][currentY] != null) && ((currentX-j) > 0) && (b[currentX-j][currentY].getPlayer() != player)) {
                         j++;
                     }
-                    if (((currentX-j) >= 0) && (board[currentX-j][currentY].getPlayer() == player)) {
-                        nbPoint=j-1;
+
+                    if ((b[currentX-j][currentY] != null) && ((currentX-j) >= 0) && (b[currentX-j][currentY].getPlayer() == player)) {
+                        nbPoint = j-1;
                     }
                 }
 
                 //East position
-                if ((currentX != 7) && (board[currentX+1][currentY].getPlayer() != player) && (board[currentX+1][currentY] != null)) {
+                if((b[currentX+1][currentY] != null) && (currentX != 7) && (b[currentX+1][currentY].getPlayer() != player)) {
                     j = 2;
-                    while (((currentX+j) < 7) && (board[currentX+j][currentY] != null) && (board[currentX+j][currentY].getPlayer() != player)) {
+
+                    while((b[currentX+j][currentY] != null) && ((currentX+j) < 7) && (b[currentX+j][currentY].getPlayer() != player)) {
                         j++;
                     }
-                    if (((currentX+j) <=7) && (board[currentX+j][currentY].getPlayer() == player)) {
-                        nbPoint=j-1;
+
+                    if((b[currentX+j][currentY] != null) && ((currentX+j) <= 7) && (b[currentX+j][currentY].getPlayer() == player)) {
+                        nbPoint = j-1;
                     }
                 }
 
                 //South-East position
-                if ((currentX != 7) && (currentY != 7) && (board[currentX+1][currentY+1].getPlayer() != player) && (board[currentX+1][currentY+1] != null)) {
+                if ((b[currentX+1][currentY+1] != null) && (currentX != 7) && (currentY != 7) && (b[currentX+1][currentY+1].getPlayer() != player)) {
                     j = 2;
-                    while (((currentX+j) < 7) && ((currentY+j) < 7) && (board[currentX+j][currentY+j] != null) && (board[currentX+j][currentY+j].getPlayer() != player)) {
+
+                    while((b[currentX+j][currentY+j] != null) && ((currentX+j) < 7) && ((currentY+j) < 7) && (b[currentX+j][currentY+j].getPlayer() != player)) {
                         j++;
                     }
-                    if (((currentX+j) <= 7) && ((currentY+j) <= 7) && (board[currentX+j][currentY+j].getPlayer() == player)) {
-                        nbPoint=j-1;
+
+                    if((b[currentX+j][currentY+j] != null) && ((currentX+j) <= 7) && ((currentY+j) <= 7) && (b[currentX+j][currentY+j].getPlayer() == player)) {
+                        nbPoint = j-1;
                     }
                 }
 
                 //Nord-West position
-                if ((currentX != 0) && (currentY != 0) && (board[currentX-1][currentY-1].getPlayer() != player) && (board[currentX-1][currentY-1] != null)) {
+                if((b[currentX-1][currentY-1] != null) && (currentX != 0) && (currentY != 0) && (b[currentX-1][currentY-1].getPlayer() != player)) {
                     j = 2;
-                    while (((currentX-j) > 0) && ((currentY-j) > 0) && (board[currentX-j][currentY-j] != null) && (board[currentX-j][currentY-j].getPlayer() != player)) {
+
+                    while((b[currentX-j][currentY-j] != null) && ((currentX-j) > 0) && ((currentY-j) > 0) && (b[currentX-j][currentY-j].getPlayer() != player)) {
                         j++;
                     }
-                    if (((currentX-j) >= 0) && ((currentY-j) >= 0) && (board[currentX-j][currentY-j].getPlayer() == player)) {
-                        nbPoint=j-1;
+
+                    if((b[currentX-j][currentY-j] != null) && ((currentX-j) >= 0) && ((currentY-j) >= 0) && (b[currentX-j][currentY-j].getPlayer() == player)) {
+                        nbPoint = j-1;
                     }
                 }
 
                 //North-East position
-                if ((currentX != 7) && (currentY != 0) && (board[currentX-1][currentY+1].getPlayer() != player) && (board[currentX-1][currentY+1] != null)) {
+                if((b[currentX-1][currentY+1] != null) && (currentX != 7) && (currentY != 0) && (b[currentX-1][currentY+1].getPlayer() != player)) {
                     j = 2;
-                    while (((currentX-j) > 0) && ((currentY+j) < 7) && (board[currentX-j][currentY+j] != null) && (board[currentX-j][currentY+j].getPlayer() != player)) {
+
+                    while((b[currentX-j][currentY+j] != null) && ((currentX-j) > 0) && ((currentY+j) < 7) && (b[currentX-j][currentY+j].getPlayer() != player)) {
                         j++;
                     }
-                    if (((currentX-j) >= 0) && ((currentY+j) <= 7) && (board[currentX-j][currentY+j].getPlayer() == player)) {
-                        nbPoint=j-1;
+
+                    if((b[currentX-j][currentY+j] != null) && ((currentX-j) >= 0) && ((currentY+j) <= 7) && (b[currentX-j][currentY+j].getPlayer() == player)) {
+                        nbPoint = j-1;
                     }
                 }
 
                 //South-West position
-                if ((currentX != 0) && (currentY != 7) && (board[currentX+1][currentY-1].getPlayer() != player) && (board[currentX+1][currentY-1] != null)) {
+                if((b[currentX+1][currentY-1] != null) && (currentX != 0) && (currentY != 7) && (b[currentX+1][currentY-1].getPlayer() != player)) {
                     j = 2;
-                    while (((currentX+j) < 7) && ((currentY-j) > 0) && (board[currentX+j][currentY-j] != null) && (board[currentX+j][currentY-j].getPlayer() != player)) {
+
+                    while((b[currentX+j][currentY-j] != null) && ((currentX+j) < 7) && ((currentY-j) > 0) && (b[currentX+j][currentY-j].getPlayer() != player)) {
                         j++;
                     }
-                    if (((currentX+j) <= 7) && ((currentY-j) >= 0) && (board[currentX+j][currentY-j].getPlayer() == player)) {
-                        nbPoint=j-1;
+
+                    if((b[currentX+j][currentY-j] != null) && ((currentX+j) <= 7) && ((currentY-j) >= 0) && (b[currentX+j][currentY-j].getPlayer() == player)) {
+                        nbPoint = j-1;
                     }
                 }
-                return nbPoint;
+
+                break;
             }
-        }*/
+        }
 
         return nbPoint;
     }
@@ -327,26 +384,32 @@ public class Game {
      * @param position Position of where the Player wants to play
      */
     public void play(Player player, Position position) {
-        this.board.placeDisk(player, position);
-        this.rule.turnDisks(this, position);
-        this.changePlayer();
-
-        /*if (this.state == State.PLAY ) {
-            if ((board.getPositions(this, this.player1).length + board.getPositions(this, this.player2).length) < 64) {
-                if (this.getPlayablePositions(player).length != 0) {
-                    player.canPlay = true;
+        if(this.state == State.PLAY ) {
+            if((board.getPositions(this, this.player1).length + board.getPositions(this, this.player2).length) < 64) {
+                if(this.getPlayablePositions(player).length != 0) {
+                    player.setCanPlay(true);
                     this.board.placeDisk(player, position);
                     this.rule.turnDisks(this, position);
                     this.changePlayer();
-                } else if (!getOtherPlayer().canPlay){
-                    this.state = State.END;
-                } else {
-                    player.canPlay = false;
                 }
-            } else {
+
+                else if(!getOtherPlayer().getCanPlay()){
+                    this.state = State.END;
+                }
+
+                else {
+                    player.setCanPlay(false);
+                }
+            }
+
+            else {
                 this.state = State.END;
             }
-        }*/
+        }
+
+        else if(this.state == State.INIT && (this.rule instanceof ReversiRule)) {
+
+        }
     }
 
     /**
@@ -398,12 +461,25 @@ public class Game {
      * Private method which changes the current Player of the Game
      */
     private void changePlayer() {
-        if (this.currentPlayer == this.player1) {
-            currentPlayer = player2;
+        if(this.currentPlayer == this.player1) {
+            this.currentPlayer = player2;
         }
 
         else {
-            currentPlayer = player1;
+            this.currentPlayer = player1;
+        }
+    }
+
+    /**
+     * Private method which gets the other Player of the Game
+     */
+    private Player getOtherPlayer() {
+        if(this.currentPlayer == this.player1) {
+            return player2;
+        }
+
+        else {
+            return player1;
         }
     }
 }

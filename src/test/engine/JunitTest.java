@@ -12,7 +12,7 @@ public class JunitTest {
         Player player1 = new HumanPlayer(UUID.randomUUID(), "", "", "");
         Player player2 = new HumanPlayer(UUID.randomUUID(), "", "", "");
         Rule rule = new OthelloRule();
-        Game game = new Game(player1, player2, rule);
+        Game game = new Game(UUID.randomUUID(), player1, player2, rule);
 
         assertEquals(2, Counter.getNbPoint(game, player1));
         assertEquals(2, Counter.getNbPoint(game, player2));
@@ -31,7 +31,7 @@ public class JunitTest {
         Player player1 = new HumanPlayer(UUID.randomUUID(), "", "", "");
         Player player2 = new HumanPlayer(UUID.randomUUID(), "", "", "");
         Rule rule = new OthelloRule();
-        Game game = new Game(player1, player2, rule);
+        Game game = new Game(UUID.randomUUID(), player1, player2, rule);
 
         assertEquals(State.INIT, game.getState());
     }
@@ -41,7 +41,7 @@ public class JunitTest {
         Player player1 = new HumanPlayer(UUID.randomUUID(), "", "", "");
         Player player2 = new HumanPlayer(UUID.randomUUID(), "", "", "");
         Rule rule = new OthelloRule();
-        Game game = new Game(player1, player2, rule);
+        Game game = new Game(UUID.randomUUID(), player1, player2, rule);
 
         Disk[] disksPlayer1 = player1.getDisks();
 
@@ -63,7 +63,7 @@ public class JunitTest {
         Player player1 = new HumanPlayer(UUID.randomUUID(), "", "", "");
         Player player2 = new HumanPlayer(UUID.randomUUID(), "", "", "");
         Rule rule = new OthelloRule();
-        Game game = new Game(player1, player2, rule);
+        Game game = new Game(UUID.randomUUID(), player1, player2, rule);
         Board b = game.getBoard();
 
         Position[] positionsPlayer1 = b.getPositions(game, player1);
@@ -105,7 +105,7 @@ public class JunitTest {
         Player player1 = new HumanPlayer(UUID.randomUUID(), "", "", "");
         Player player2 = new HumanPlayer(UUID.randomUUID(), "", "", "");
         Rule rule = new ReversiRule();
-        Game game = new Game(player1, player2, rule);
+        Game game = new Game(UUID.randomUUID(), player1, player2, rule);
         Board b = game.getBoard();
 
         Position[] positionsPlayer1 = b.getPositions(game, player1);
@@ -130,7 +130,7 @@ public class JunitTest {
         Player player1 = new HumanPlayer(UUID.randomUUID(), "", "", "");
         Player player2 = new HumanPlayer(UUID.randomUUID(), "", "", "");
         Rule rule = new OthelloRule();
-        Game game = new Game(player1, player2, rule);
+        Game game = new Game(UUID.randomUUID(), player1, player2, rule);
 
         assertEquals(rule, game.getRule());
 
@@ -186,7 +186,7 @@ public class JunitTest {
         Player player1 = new HumanPlayer(UUID.randomUUID(), "", "", "");
         Player player2 = new HumanPlayer(UUID.randomUUID(), "", "", "");
         Rule rule = new ReversiRule();
-        Game game = new Game(player1, player2, rule);
+        Game game = new Game(UUID.randomUUID(), player1, player2, rule);
 
         assertEquals(rule, game.getRule());
 
