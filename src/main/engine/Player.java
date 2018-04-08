@@ -1,6 +1,7 @@
 package engine;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.UUID;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
@@ -11,7 +12,7 @@ import java.beans.PropertyChangeListener;
  *
  * @version 1.0
  */
-public abstract class Player {
+public abstract class Player implements Serializable {
 
     /**
      * Name of the property "id".
@@ -64,10 +65,14 @@ public abstract class Player {
     protected Player(UUID id, String nickname) {
         this.changeSupport = new PropertyChangeSupport(this);
 
-        this.id = id;
-        this.nickname = nickname;
-        this.disks = new Disk[32];
+        this.id = null;
+        this.setId(id);
+        this.nickname = "";
+        this.setNickname(nickname);
+        this.disks = null;
+        this.setDisks(new Disk[32]);
         this.canPlay = true;
+        this.setCanPlay(true);
     }
 
     /**
@@ -80,6 +85,18 @@ public abstract class Player {
     }
 
     /**
+     * Sets the UUID of a Player.
+     *
+     * @param id The new UUID of a Player
+     */
+    void setId(UUID id) {
+        UUID oldId = this.id;
+
+        this.id = id;
+        this.changeSupport.firePropertyChange(ID_PLAYER_PROPERTY, oldId, this.id);
+    }
+
+    /**
      * Gets the nickname of a Player.
      *
      * @return The nickname of a Player
@@ -89,12 +106,36 @@ public abstract class Player {
     }
 
     /**
+     * Sets the nickname of a Player.
+     *
+     * @param nickname The new nickname of a Player
+     */
+    public void setNickname(String nickname) {
+        String oldNickname = this.nickname;
+
+        this.nickname = nickname;
+        this.changeSupport.firePropertyChange(NICKNAME_PROPERTY, oldNickname, this.nickname);
+    }
+
+    /**
      * Gets the Disks of a Player.
      *
      * @return Array of the Disks of a Player
      */
     public Disk[] getDisks() {
         return this.disks;
+    }
+
+    /**
+     * Sets the Disks of a Player.
+     *
+     * @param disks New array of the Disks of a Player
+     */
+    void setDisks(Disk[] disks) {
+        Disk[] oldDisks = this.disks;
+
+        this.disks = disks;
+        this.changeSupport.firePropertyChange(DISKS_PROPERTY, oldDisks, this.disks);
     }
 
     /**
@@ -112,7 +153,10 @@ public abstract class Player {
      * @param canPlay true if a Player can play
      */
     void setCanPlay(boolean canPlay) {
+        boolean oldCanPlay = this.canPlay;
+
         this.canPlay = canPlay;
+        this.changeSupport.firePropertyChange(CAN_PLAY_PROPERTY, oldCanPlay, this.canPlay);
     }
 
     /**

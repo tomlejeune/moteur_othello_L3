@@ -1,8 +1,5 @@
 package engine;
 
-import fr.univubs.inf1603.othello.DAO.DAO;
-import fr.univubs.inf1603.othello.DAOFile.DAOFile;
-
 import java.util.UUID;
 import java.awt.Color;
 
@@ -130,9 +127,6 @@ public class EngineBridge {
      * @param player The player to save
      */
     public static void savePlayer(Player player) {
-        DAOFile daoFile = new DAOFile();
-
-        //daoFile.savePlayer(player);
         // TODO
     }
 

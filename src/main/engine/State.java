@@ -1,11 +1,13 @@
 package engine;
 
+import java.io.Serializable;
+
 /**
  * State describes the different states in a Game.
  *
  * @version 1.0
  */
-public enum State {
+public enum State implements Serializable {
     INIT("INIT"),
     PLAY("PLAY"),
     END("END");

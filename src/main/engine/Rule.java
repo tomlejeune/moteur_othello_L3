@@ -1,5 +1,7 @@
 package engine;
 
+import java.io.Serializable;
+
 /**
  * Rule is an abstract class that specifies every method that a specific Rule of the Othello should have.
  * Every rule should extend this class.
@@ -7,7 +9,7 @@ package engine;
  *
  * @version 1.0
  */
-public abstract class Rule {
+public abstract class Rule implements Serializable {
 
     /**
      * Initializes the Board at the beginning of the given game

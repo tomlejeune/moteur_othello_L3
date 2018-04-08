@@ -3,6 +3,7 @@ package engine;
 import java.awt.Color;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 
 /**
  * Disk is a disk on the Board. It has a color.
@@ -10,17 +11,7 @@ import java.beans.PropertyChangeListener;
  *
  * @version 1.0
  */
-public class Disk {
-
-    /**
-     * Name of the property "game".
-     */
-    private static final String GAME_PROPERTY = "Game";
-
-    /**
-     * Name of the property "player".
-     */
-    public static final String PLAYER_PROPERTY = "Player";
+public class Disk implements Serializable {
 
     /**
      * Name of the property "color".
@@ -58,7 +49,8 @@ public class Disk {
 
         this.game = game;
         this.player = player;
-        this.color = color;
+        this.color = null;
+        this.setColor(color);
     }
 
     /**

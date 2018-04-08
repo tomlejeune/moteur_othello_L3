@@ -16,7 +16,7 @@ public class MainTest {
         System.out.println("\nTEST : \n");
 
         try {
-            game.play(player1, new Position(5, 3));
+            game.play(player1, new Position(4, 5));
         }
 
         catch (PlayException exception) {

@@ -1,5 +1,6 @@
 package engine;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
@@ -11,17 +12,12 @@ import java.beans.PropertyChangeListener;
  *
  * @version 1.0
  */
-public class Board {
+public class Board implements Serializable {
 
     /**
      * Name of the property "board".
      */
     public static final String BOARD_PROPERTY = "Board";
-
-    /**
-     * Name of the property "game".
-     */
-    public static final String GAME_PROPERTY = "Game";
 
     /**
      * Listener support.
@@ -39,15 +35,14 @@ public class Board {
     private final static int MAX_SIZE_HEIGHT = 8;
 
     /**
-     *
+     * Board in form of an Array
      */
     private Disk[][] board = new Disk[MAX_SIZE_WIDTH][MAX_SIZE_HEIGHT];
 
     /**
-     *
+     * Game played
      */
     private Game game;
-
 
     /**
      * Constructs a Board by initializing the HashTable.

@@ -55,9 +55,14 @@ public class HumanPlayer extends Player {
     HumanPlayer(UUID id, String nickname, String mail, String hashPassword) {
         super(id, nickname);
 
-        this.mail = mail;
-        this.hashPassword = hashPassword;
+        this.changeSupport = new PropertyChangeSupport(this);
+
+        this.mail = "";
+        this.setMail(mail);
+        this.hashPassword = "";
+        this.setHashPassword(hashPassword);
         this.forfeit = false;
+        this.setForfeit(false);
     }
 
     /**
@@ -70,6 +75,18 @@ public class HumanPlayer extends Player {
     }
 
     /**
+     * Sets the mail of the HumanPlayer.
+     *
+     * @param mail The new mail of the HumanPlayer
+     */
+    public void setMail(String mail) {
+        String oldMail = this.mail;
+
+        this.mail = mail;
+        this.changeSupport.firePropertyChange(MAIL_PROPERTY, oldMail, this.mail);
+    }
+
+    /**
      * Gets the password of the HumanPlayer.
      *
      * @return The password of the HumanPlayer
@@ -79,12 +96,36 @@ public class HumanPlayer extends Player {
     }
 
     /**
+     * Gets the password of the HumanPlayer.
+     *
+     * @param hashPassword The new password of the HumanPlayer
+     */
+    public void setHashPassword(String hashPassword) {
+        String oldHashPassword = this.hashPassword;
+
+        this.hashPassword = hashPassword;
+        this.changeSupport.firePropertyChange(HASH_PASSWORD_PROPERTY, oldHashPassword, this.hashPassword);
+    }
+
+    /**
      * Gets if a HumanPlayer forfeits.
      *
      * @return If a HumanPlayer forfeits
      */
     public boolean getForfeit() {
         return this.forfeit;
+    }
+
+    /**
+     * Sets if a HumanPlayer forfeits.
+     *
+     * @param forfeit If a HumanPlayer forfeits
+     */
+    public void setForfeit(boolean forfeit) {
+        boolean oldForfeit = this.forfeit;
+
+        this.forfeit = forfeit;
+        this.changeSupport.firePropertyChange(FORFEIT_PROPERTY, oldForfeit, this.forfeit);
     }
 
     /**
@@ -156,7 +197,7 @@ public class HumanPlayer extends Player {
      * @param game Game played
      */
     public void forfeit(Game game) {
-        this.forfeit = true;
+        this.setForfeit(true);
 
         game.setState(State.END);
     }

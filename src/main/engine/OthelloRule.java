@@ -33,10 +33,10 @@ public class OthelloRule extends Rule {
         Disk[] disksPlayer1 = game.getPlayer1().getDisks();
         Disk[] disksPlayer2 = game.getPlayer2().getDisks();
 
-        board[3][3] = disksPlayer1[0];
-        board[3][4] = disksPlayer2[0];
-        board[4][3] = disksPlayer2[1];
-        board[4][4] = disksPlayer1[1];
+        board[3][3] = disksPlayer2[0];
+        board[3][4] = disksPlayer1[0];
+        board[4][3] = disksPlayer1[1];
+        board[4][4] = disksPlayer2[1];
 
         retour.setBoard(board);
 
@@ -117,7 +117,6 @@ public class OthelloRule extends Rule {
                 int j = 2;
 
                 while(((currentX+j) < 8) && (board[currentX+j][currentY] != null) && (board[currentX+j][currentY].getPlayer() != player)) {
-                    System.out.println("j : "+j);
                     j++;
                 }
 

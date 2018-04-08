@@ -2,6 +2,7 @@ package engine;
 
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 import java.util.UUID;
 import java.awt.Color;
 
@@ -12,7 +13,7 @@ import java.awt.Color;
  *
  * @version 1.0
  */
-public class Game implements Cloneable {
+public class Game implements Cloneable, Serializable {
 
     /**
      * Name of the property "idGame".
@@ -120,22 +121,31 @@ public class Game implements Cloneable {
     Game(UUID id, Player player1, Player player2, Rule rule) {
         this.changeSupport = new PropertyChangeSupport(this);
 
-        this.idGame = id;
-        this.rule = rule;
+        this.idGame = null;
+        this.setUUID(id);
+        this.rule = null;
+        this.setRule(rule);
+        this.player1 = null;
+        this.setPlayer1(player1);
+        this.player2 = null;
+        this.setPlayer2(player2);
+        this.currentPlayer = null;
+        this.setCurrentPlayer(this.rule.getFirstPlayer(this));
 
-        this.player1 = player1;
-        this.player2 = player2;
-        this.player1.initializeDisks(this, Color.BLACK);
-        this.player2.initializeDisks(this, Color.WHITE);
+        this.getCurrentPlayer().initializeDisks(this, Color.BLACK);
+        this.getOtherPlayer().initializeDisks(this, Color.WHITE);
 
-        this.currentPlayer = this.rule.getFirstPlayer(this);
-        this.state = State.INIT;
-        this.board = this.rule.initializeBoard(this);
-        this.positions = new Position[64];
+        this.state = null;
+        this.setState(State.INIT);
+        this.board = null;
+        this.setBoard(this.rule.initializeBoard(this));
+        this.positions = null;
+        this.setPositions(new Position[64]);
         this.turn = 0;
+        this.setTurn(0);
 
         if(this.rule instanceof OthelloRule) {
-            this.state = State.PLAY;
+            this.setState(State.PLAY);
         }
     }
 
@@ -151,22 +161,31 @@ public class Game implements Cloneable {
     Game(UUID id, Player player1, Player player2, Rule rule, Position[] positions) {
         this.changeSupport = new PropertyChangeSupport(this);
 
-        this.idGame = id;
-        this.rule = rule;
+        this.idGame = null;
+        this.setUUID(id);
+        this.rule = null;
+        this.setRule(rule);
+        this.player1 = null;
+        this.setPlayer1(player1);
+        this.player2 = null;
+        this.setPlayer2(player2);
+        this.currentPlayer = null;
+        this.setCurrentPlayer(this.rule.getFirstPlayer(this));
 
-        this.player1 = player1;
-        this.player2 = player2;
-        this.player1.initializeDisks(this, Color.BLACK);
-        this.player2.initializeDisks(this, Color.WHITE);
+        this.currentPlayer.initializeDisks(this, Color.BLACK);
+        this.getOtherPlayer().initializeDisks(this, Color.WHITE);
 
-        this.currentPlayer = this.rule.getFirstPlayer(this);
-        this.state = State.INIT;
-        this.board = this.rule.initializeBoard(this);
-        this.positions = positions;
-        this.turn = this.positions.length;
+        this.state = null;
+        this.setState(State.INIT);
+        this.board = null;
+        this.setBoard(this.rule.initializeBoard(this));
+        this.positions = null;
+        this.setPositions(positions);
+        this.turn = 0;
+        this.setTurn(this.positions.length);
 
         if(this.rule instanceof OthelloRule) {
-            this.state = State.PLAY;
+            this.setState(State.PLAY);
         }
 
         Disk[][] b = new Disk[8][8];
@@ -197,12 +216,36 @@ public class Game implements Cloneable {
     }
 
     /**
+     * Sets the Game UUID.
+     *
+     * @param id The new UUID of the Game
+     */
+    void setUUID(UUID id) {
+        UUID oldId = this.idGame;
+
+        this.idGame = id;
+        this.changeSupport.firePropertyChange(ID_GAME_PROPERTY, oldId, this.idGame);
+    }
+
+    /**
      * Gets the Rule of the Game.
      *
      * @return The Rule of the Game
      */
     public Rule getRule() {
         return this.rule;
+    }
+
+    /**
+     * Sets the Rule of the Game.
+     *
+     * @param rule The new Rule of the Game
+     */
+    void setRule(Rule rule) {
+        Rule oldRule = this.rule;
+
+        this.rule = rule;
+        this.changeSupport.firePropertyChange(RULE_PROPERTY, oldRule, this.rule);
     }
 
     /**
@@ -215,6 +258,18 @@ public class Game implements Cloneable {
     }
 
     /**
+     * Sets the first Player of the Game.
+     *
+     * @param player The new first Player of the Game
+     */
+    void setPlayer1(Player player) {
+        Player oldPlayer = this.player1;
+
+        this.player1 = player;
+        this.changeSupport.firePropertyChange(PLAYER_1_PROPERTY, oldPlayer, this.player1);
+    }
+
+    /**
      * Gets the second Player of the Game.
      *
      * @return The second Player of the Game
@@ -224,12 +279,39 @@ public class Game implements Cloneable {
     }
 
     /**
+     * Sets the second Player of the Game.
+     *
+     * @param player The new second Player of the Game
+     */
+    void setPlayer2(Player player) {
+        Player oldPlayer = this.player2;
+
+        this.player2 = player;
+        this.changeSupport.firePropertyChange(PLAYER_2_PROPERTY, oldPlayer, this.player2);
+    }
+
+    /**
      * Gets the current Player of the Game.
      *
      * @return The current Player of the Game
      */
     public Player getCurrentPlayer() {
         return this.currentPlayer;
+    }
+
+    /**
+     * Sets the current player
+     *
+     * @param player The new current player
+     */
+    void setCurrentPlayer(Player player) {
+        Player oldPlayer = this.currentPlayer;
+
+        if(player == this.getOtherPlayer()) {
+            this.currentPlayer = player;
+
+            this.changeSupport.firePropertyChange(CURRENT_PLAYER_PROPERTY, oldPlayer, this.currentPlayer);
+        }
     }
 
     /**
@@ -247,7 +329,10 @@ public class Game implements Cloneable {
      * @param state New state of the Game.
      */
     void setState(State state) {
+        State oldState = this.state;
+
         this.state = state;
+        this.changeSupport.firePropertyChange(STATE_PROPERTY, oldState, this.state);
     }
 
     /**
@@ -260,6 +345,18 @@ public class Game implements Cloneable {
     }
 
     /**
+     * Sets the Board of the Game.
+     *
+     * @param board The new Board of the Game
+     */
+    void setBoard(Board board) {
+        Board oldBoard = this.board;
+
+        this.board = board;
+        this.changeSupport.firePropertyChange(BOARD_PROPERTY, oldBoard, this.board);
+    }
+
+    /**
      * Gets the Positions played in the Game
      *
      * @return The Positions played in the Game
@@ -269,12 +366,36 @@ public class Game implements Cloneable {
     }
 
     /**
+     * Sets the Positions played in the Game.
+     *
+     * @param positions The new Positions played in the Game
+     */
+    void setPositions(Position[] positions) {
+        Position[] oldPositions = this.positions;
+
+        this.positions = positions;
+        this.changeSupport.firePropertyChange(POSITIONS_PROPERTY, oldPositions, this.positions);
+    }
+
+    /**
      * Gets the turn of the Game
      *
      * @return The turn of the Game
      */
     public int getTurn() {
         return this.turn;
+    }
+
+    /**
+     * Sets the turn of the Game
+     *
+     * @param turn The new turn of the Game
+     */
+    void setTurn(int turn) {
+        int oldTurn = this.turn;
+
+        this.turn = turn;
+        this.changeSupport.firePropertyChange(TURN_PROPERTY, oldTurn, this.turn);
     }
 
     /**
@@ -616,11 +737,11 @@ public class Game implements Cloneable {
      */
     private void changePlayer() {
         if(this.currentPlayer == this.player1) {
-            this.currentPlayer = player2;
+            this.setCurrentPlayer(this.player2);
         }
 
         else {
-            this.currentPlayer = player1;
+            this.setCurrentPlayer(this.player1);
         }
     }
 

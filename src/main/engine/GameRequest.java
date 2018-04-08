@@ -1,5 +1,6 @@
 package engine;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -10,7 +11,7 @@ import java.util.UUID;
  *
  * @version 1.0.0
  */
-public class GameRequest {
+public class GameRequest implements Serializable {
 
     private Player player1;
     private Player player2;

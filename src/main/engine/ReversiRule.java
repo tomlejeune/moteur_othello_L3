@@ -141,7 +141,6 @@ public class ReversiRule extends Rule {
                     int j = 2;
 
                     while(((currentX+j) < 8) && (board[currentX+j][currentY] != null) && (board[currentX+j][currentY].getPlayer() != player)) {
-                        System.out.println("j : "+j);
                         j++;
                     }
 

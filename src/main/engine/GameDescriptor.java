@@ -1,5 +1,6 @@
 package engine;
 
+import java.io.Serializable;
 import java.util.UUID;
 import java.util.Hashtable;
 
@@ -8,7 +9,7 @@ import java.util.Hashtable;
  *
  * @version 1.0
  */
-public class GameDescriptor {
+public class GameDescriptor implements Serializable {
 
     /**
      * UUID of a Game

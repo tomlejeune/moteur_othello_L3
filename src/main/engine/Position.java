@@ -1,11 +1,13 @@
 package engine;
 
+import java.io.Serializable;
+
 /**
  * Position is a precise point on the Board which has two coordinates.
  *
  * @version 1.0
  */
-public class Position {
+public class Position implements Serializable {
 
     /**
      * Coordinate x
