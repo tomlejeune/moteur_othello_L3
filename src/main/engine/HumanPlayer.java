@@ -121,7 +121,7 @@ public class HumanPlayer extends Player {
      *
      * @param forfeit If a HumanPlayer forfeits
      */
-    public void setForfeit(boolean forfeit) {
+    void setForfeit(boolean forfeit) {
         boolean oldForfeit = this.forfeit;
 
         this.forfeit = forfeit;
