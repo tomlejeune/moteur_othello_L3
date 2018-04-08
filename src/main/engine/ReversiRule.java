@@ -42,15 +42,7 @@ public class ReversiRule extends Rule {
      * @return The first Player to play in the given Game
      */
     Player getFirstPlayer(Game game) {
-        double randomNumber = Math.random();
-
-        if(randomNumber < 0.5) {
-            return game.getPlayer2();
-        }
-
-        else {
-            return game.getPlayer1();
-        }
+        return game.getPlayer1();
     }
 
     /**
@@ -83,6 +75,7 @@ public class ReversiRule extends Rule {
 
                 if(board[3][4] == null) {
                     playablePositions[index] = new Position(3, 4);
+                    index++;
                 }
 
                 if(board[4][4] == null) {
@@ -92,6 +85,7 @@ public class ReversiRule extends Rule {
 
                 if(board[4][3] == null) {
                     playablePositions[index] = new Position(4, 3);
+                    index++;
                 }
             }
         }
@@ -590,7 +584,7 @@ public class ReversiRule extends Rule {
         }
 
         else {
-            if(Counter.getNbPoint(game, game.getPlayer1()) > Counter.getNbPoint(game, game.getPlayer2())) {
+            if(Counter.getNbPoints(game, game.getPlayer1()) > Counter.getNbPoints(game, game.getPlayer2())) {
                 retour = game.getPlayer1();
             }
 
@@ -620,7 +614,7 @@ public class ReversiRule extends Rule {
         }
 
         else {
-            if(Counter.getNbPoint(game, game.getPlayer1()) > Counter.getNbPoint(game, game.getPlayer2())) {
+            if(Counter.getNbPoints(game, game.getPlayer1()) > Counter.getNbPoints(game, game.getPlayer2())) {
                 retour = game.getPlayer2();
             }
 
@@ -650,7 +644,7 @@ public class ReversiRule extends Rule {
         }
 
         else {
-            if(Counter.getNbPoint(game, game.getPlayer1()) == Counter.getNbPoint(game, game.getPlayer2())) {
+            if(Counter.getNbPoints(game, game.getPlayer1()) == Counter.getNbPoints(game, game.getPlayer2())) {
                 retour = true;
             }
         }

@@ -113,7 +113,40 @@ public class HumanPlayer extends Player {
      *
      * @return A random Player to play against
      */
-    Player findRandomOpponent() {
+    HumanPlayer findRandomOpponent() {
+
+        /*
+            package engine;
+
+            import java.util.Queue;
+
+
+
+            public class GestionForRandomOppement {
+
+                private static Queue<Player> opponent;
+
+
+                public static Player getRandomOppoment(Player player1) {
+                    // on vérifie que player1 n'est pas deja inscrit en liste d'attente
+                    if(!opponent.contains(player1)){
+                        // dépile le premier Player de la queue
+                        Player jrs = opponent.poll();
+                        if(jrs == null) {
+                            // si aucun opposant n'est trouvé player1 est ajouté en liste d'attente
+                            opponent.add(player1);
+                            System.out.println("Veuillez patienter le temps de trouver un adversaire");
+                        }
+                        else {
+                            return opponent.poll();
+                        }
+
+                    }
+                    return null;
+                }
+            }
+        */
+
         return null;
     }
 

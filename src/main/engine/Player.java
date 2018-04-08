@@ -66,7 +66,7 @@ public abstract class Player {
 
         this.id = id;
         this.nickname = nickname;
-        this.disks = new Disk[64];
+        this.disks = new Disk[32];
         this.canPlay = true;
     }
 
@@ -124,6 +124,41 @@ public abstract class Player {
     void initializeDisks(Game game, Color color) {
         for(int i  = 0 ; i < this.disks.length ; i++) {
             this.disks[i] = new Disk(game, this, color);
+        }
+    }
+
+    /**
+     * Gets the number of disks in storage of the Player in a Game
+     *
+     * @return The number of disks in storage of the Player in a Game
+     */
+    int counterOfDisks() {
+        int retour = 0;
+
+        for(int i = 0 ; i < this.disks.length ; i++) {
+            if(this.disks[i] != null) {
+                retour++;
+            }
+
+            else {
+                break;
+            }
+        }
+        return retour;
+    }
+
+    /**
+     * Removes a disk in storage when a move is played
+     */
+    void removeADisk() {
+        int i = 0;
+
+        while((i < this.disks.length) && (disks[i] != null)) {
+            i++;
+        }
+
+        if(i > 0) {
+            disks[i-1] = null;
         }
     }
 

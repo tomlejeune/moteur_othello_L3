@@ -50,6 +50,16 @@ public class Game implements Cloneable {
     private final static String BOARD_PROPERTY = "Board";
 
     /**
+     * Name of the property "positions".
+     */
+    private final static String POSITIONS_PROPERTY = "Positions";
+
+    /**
+     * Name of the property "turn".
+     */
+    private final static String TURN_PROPERTY = "Turn";
+
+    /**
      * Listener support.
      */
     private PropertyChangeSupport changeSupport;
@@ -90,6 +100,16 @@ public class Game implements Cloneable {
     private Board board;
 
     /**
+     * Positions played in the Game
+     */
+    private Position[] positions;
+
+    /**
+     * Turn of the Game
+     */
+    private int turn;
+
+    /**
      * Constructs a Game with two Players and a Rule. It also initializes all other attributes.
      *
      * @param id UUID of the Game
@@ -105,12 +125,18 @@ public class Game implements Cloneable {
 
         this.player1 = player1;
         this.player2 = player2;
-        this.player1.initializeDisks(this, Color.WHITE);
-        this.player2.initializeDisks(this, Color.BLACK);
+        this.player1.initializeDisks(this, Color.BLACK);
+        this.player2.initializeDisks(this, Color.WHITE);
 
         this.currentPlayer = this.rule.getFirstPlayer(this);
         this.state = State.INIT;
         this.board = this.rule.initializeBoard(this);
+        this.positions = new Position[64];
+        this.turn = 0;
+
+        if(this.rule instanceof OthelloRule) {
+            this.state = State.PLAY;
+        }
     }
 
     /**
@@ -120,9 +146,9 @@ public class Game implements Cloneable {
      * @param player1 First player of the Game
      * @param player2 Second player of the Game
      * @param rule Rule of the Game
-     * @param board Disks played in the Game
+     * @param positions Positions played in the Game
      */
-    Game(UUID id, Player player1, Player player2, Rule rule, Disk[][] board) {
+    Game(UUID id, Player player1, Player player2, Rule rule, Position[] positions) {
         this.changeSupport = new PropertyChangeSupport(this);
 
         this.idGame = id;
@@ -130,13 +156,35 @@ public class Game implements Cloneable {
 
         this.player1 = player1;
         this.player2 = player2;
-        this.player1.initializeDisks(this, Color.WHITE);
-        this.player2.initializeDisks(this, Color.BLACK);
+        this.player1.initializeDisks(this, Color.BLACK);
+        this.player2.initializeDisks(this, Color.WHITE);
 
         this.currentPlayer = this.rule.getFirstPlayer(this);
         this.state = State.INIT;
         this.board = this.rule.initializeBoard(this);
-        this.board.setBoard(board);
+        this.positions = positions;
+        this.turn = this.positions.length;
+
+        if(this.rule instanceof OthelloRule) {
+            this.state = State.PLAY;
+        }
+
+        Disk[][] b = new Disk[8][8];
+
+        Disk[] disksPlayer1 = this.player1.getDisks();
+        Disk[] disksPlayer2 = this.player2.getDisks();
+
+        for(int i = 0 ; i < this.positions.length ; i++) {
+            if((i % 2) == 0) {
+                b[this.positions[i].getXCoordinate()][this.positions[i].getYCoordinate()] = disksPlayer1[this.getNbPoints(player1)];
+            }
+
+            else {
+                b[this.positions[i].getXCoordinate()][this.positions[i].getYCoordinate()] = disksPlayer2[this.getNbPoints(player2)];
+            }
+        }
+
+        this.board.setBoard(b);
     }
 
     /**
@@ -212,6 +260,24 @@ public class Game implements Cloneable {
     }
 
     /**
+     * Gets the Positions played in the Game
+     *
+     * @return The Positions played in the Game
+     */
+    public Position[] getPositions() {
+        return this.positions;
+    }
+
+    /**
+     * Gets the turn of the Game
+     *
+     * @return The turn of the Game
+     */
+    public int getTurn() {
+        return this.turn;
+    }
+
+    /**
      * Gets the Positions where the given Player can play by asking the Rule.
      *
      * @param player Player that plays
@@ -238,7 +304,7 @@ public class Game implements Cloneable {
      * @return The number of points of the given Player
      */
     public int getNbPoints(Player player) {
-        return Counter.getNbPoint(this, player);
+        return Counter.getNbPoints(this, player);
     }
 
     /**
@@ -253,120 +319,159 @@ public class Game implements Cloneable {
         int nbPoint = 0;
         int currentX = position.getXCoordinate();
         int currentY = position.getYCoordinate();
-
+        boolean first = true;
         Disk[][] b = this.board.getBoard();
 
         Position[] playablePositions = this.rule.getPlayablePositions(this, player);
 
-        int j = 0;
+        int j;
 
         for(int i = 0 ; i < playablePositions.length ; i++) {
 
             //is the position playable ?
-            if(position == playablePositions[i]) {
-                nbPoint++; //point of the disk itself
+            if((currentX == playablePositions[i].getXCoordinate()) && (currentY == playablePositions[i].getYCoordinate())) {
+                //nbPoint++; //point of the disk itself
 
                 //North position
-                if((b[currentX][currentY-1] != null) && (currentY != 0) && (b[currentX][currentY-1].getPlayer() != player)) {
+                if((currentY != 0) && (b[currentX][currentY-1] != null) && (b[currentX][currentY-1].getPlayer() != player)) {
                     j = 2;
 
-                    while((b[currentX][currentY-j] != null) && ((currentY-j) > 0) && (b[currentX][currentY-j].getPlayer() != player)) {
+                    while(((currentY-j) > 0) && (b[currentX][currentY-j] != null) && (b[currentX][currentY-j].getPlayer() != player)) {
                         j++;
                     }
 
-                    if((b[currentX][currentY-j] != null) && ((currentY-j) >= 0) && (b[currentX][currentY-j].getPlayer() == player)) {
-                        nbPoint = j-1;
+                    if(((currentY-j) >= 0) && (b[currentX][currentY-j] != null) && (b[currentX][currentY-j].getPlayer() == player)) {
+                        if (first) {
+                            nbPoint=j;
+                            first =false;
+                        } else {
+                            nbPoint += j-1;
+                        }
                     }
                 }
 
                 //South position
-                if((b[currentX][currentY+1] != null) && (currentY != 7) && (b[currentX][currentY+1].getPlayer() != player)) {
+                if((currentY != 7) && (b[currentX][currentY+1] != null) && (b[currentX][currentY+1].getPlayer() != player)) {
                     j = 2;
 
-                    while((b[currentX][currentY+j] != null) && ((currentY+j) < 7) && (b[currentX][currentY+j].getPlayer() != player)) {
+                    while(((currentY+j) < 7) && (b[currentX][currentY+j] != null) && (b[currentX][currentY+j].getPlayer() != player)) {
                         j++;
                     }
 
-                    if ((b[currentX][currentY+j] != null) && ((currentY+j) <= 7) && (b[currentX][currentY+j].getPlayer() == player)) {
-                        nbPoint = j-1;
+                    if (((currentY+j) <= 7) && (b[currentX][currentY+j] != null) && (b[currentX][currentY+j].getPlayer() == player)) {
+                        if (first) {
+                            nbPoint=j;
+                            first = false;
+                        } else {
+                            nbPoint += j-1;
+                        }
                     }
                 }
 
                 //West position
-                if((b[currentX-1][currentY] != null) && (currentX != 0) && (b[currentX-1][currentY].getPlayer() != player)) {
+                if((currentX != 0) && (b[currentX-1][currentY] != null) && (b[currentX-1][currentY].getPlayer() != player)) {
                     j = 2;
 
-                    while((b[currentX-j][currentY] != null) && ((currentX-j) > 0) && (b[currentX-j][currentY].getPlayer() != player)) {
+                    while(((currentX-j) > 0) && (b[currentX-j][currentY] != null) && (b[currentX-j][currentY].getPlayer() != player)) {
                         j++;
                     }
 
-                    if ((b[currentX-j][currentY] != null) && ((currentX-j) >= 0) && (b[currentX-j][currentY].getPlayer() == player)) {
-                        nbPoint = j-1;
+                    if (((currentX-j) >= 0) && (b[currentX-j][currentY] != null) && (b[currentX-j][currentY].getPlayer() == player)) {
+                        if (first) {
+                            nbPoint=j;
+                            first = false;
+                        } else {
+                            nbPoint += j-1;
+                        }
                     }
                 }
 
                 //East position
-                if((b[currentX+1][currentY] != null) && (currentX != 7) && (b[currentX+1][currentY].getPlayer() != player)) {
+                if((currentX != 7) && (b[currentX+1][currentY] != null) && (b[currentX+1][currentY].getPlayer() != player)) {
                     j = 2;
 
-                    while((b[currentX+j][currentY] != null) && ((currentX+j) < 7) && (b[currentX+j][currentY].getPlayer() != player)) {
+                    while(((currentX+j) < 7) && (b[currentX+j][currentY] != null) && (b[currentX+j][currentY].getPlayer() != player)) {
                         j++;
                     }
 
-                    if((b[currentX+j][currentY] != null) && ((currentX+j) <= 7) && (b[currentX+j][currentY].getPlayer() == player)) {
-                        nbPoint = j-1;
+                    if(((currentX+j) <= 7) && (b[currentX+j][currentY] != null) && (b[currentX+j][currentY].getPlayer() == player)) {
+                        if (first) {
+                            nbPoint=j;
+                            first = false;
+                        } else {
+                            nbPoint += j-1;
+                        }
                     }
                 }
 
                 //South-East position
-                if ((b[currentX+1][currentY+1] != null) && (currentX != 7) && (currentY != 7) && (b[currentX+1][currentY+1].getPlayer() != player)) {
+                if ((currentX != 7) && (currentY != 7) && (b[currentX+1][currentY+1] != null) && (b[currentX+1][currentY+1].getPlayer() != player)) {
                     j = 2;
 
-                    while((b[currentX+j][currentY+j] != null) && ((currentX+j) < 7) && ((currentY+j) < 7) && (b[currentX+j][currentY+j].getPlayer() != player)) {
+                    while(((currentX+j) < 7) && ((currentY+j) < 7) && (b[currentX+j][currentY+j] != null) && (b[currentX+j][currentY+j].getPlayer() != player)) {
                         j++;
                     }
 
-                    if((b[currentX+j][currentY+j] != null) && ((currentX+j) <= 7) && ((currentY+j) <= 7) && (b[currentX+j][currentY+j].getPlayer() == player)) {
-                        nbPoint = j-1;
+                    if(((currentX+j) <= 7) && ((currentY+j) <= 7) && (b[currentX+j][currentY+j] != null) && (b[currentX+j][currentY+j].getPlayer() == player)) {
+                        if (first) {
+                            nbPoint=j;
+                            first = false;
+                        } else {
+                            nbPoint += j-1;
+                        }
                     }
                 }
 
-                //Nord-West position
-                if((b[currentX-1][currentY-1] != null) && (currentX != 0) && (currentY != 0) && (b[currentX-1][currentY-1].getPlayer() != player)) {
+                //North-West position
+                if((currentX != 0) && (currentY != 0) && (b[currentX-1][currentY-1] != null) && (b[currentX-1][currentY-1].getPlayer() != player)) {
                     j = 2;
 
-                    while((b[currentX-j][currentY-j] != null) && ((currentX-j) > 0) && ((currentY-j) > 0) && (b[currentX-j][currentY-j].getPlayer() != player)) {
+                    while(((currentX-j) > 0) && ((currentY-j) > 0) && (b[currentX-j][currentY-j] != null) && (b[currentX-j][currentY-j].getPlayer() != player)) {
                         j++;
                     }
 
-                    if((b[currentX-j][currentY-j] != null) && ((currentX-j) >= 0) && ((currentY-j) >= 0) && (b[currentX-j][currentY-j].getPlayer() == player)) {
-                        nbPoint = j-1;
+                    if(((currentX-j) >= 0) && ((currentY-j) >= 0) && (b[currentX-j][currentY-j] != null) && (b[currentX-j][currentY-j].getPlayer() == player)) {
+                        if (first) {
+                            nbPoint=j;
+                            first = false;
+                        } else {
+                            nbPoint += j-1;
+                        }
                     }
                 }
 
                 //North-East position
-                if((b[currentX-1][currentY+1] != null) && (currentX != 7) && (currentY != 0) && (b[currentX-1][currentY+1].getPlayer() != player)) {
+                if((currentX != 7) && (currentY != 0) && (b[currentX+1][currentY-1] != null) && (b[currentX+1][currentY-1].getPlayer() != player)) {
                     j = 2;
 
-                    while((b[currentX-j][currentY+j] != null) && ((currentX-j) > 0) && ((currentY+j) < 7) && (b[currentX-j][currentY+j].getPlayer() != player)) {
+                    while(((currentX+j) < 7) && ((currentY-j) > 0) && (b[currentX+j][currentY-j] != null) && (b[currentX+j][currentY-j].getPlayer() != player)) {
                         j++;
                     }
 
-                    if((b[currentX-j][currentY+j] != null) && ((currentX-j) >= 0) && ((currentY+j) <= 7) && (b[currentX-j][currentY+j].getPlayer() == player)) {
-                        nbPoint = j-1;
+                    if(((currentX+j) <= 7) && ((currentY-j) >= 0) && (b[currentX+j][currentY-j] != null) && (b[currentX+j][currentY-j].getPlayer() == player)) {
+                        if (first) {
+                            nbPoint=j;
+                            first = false;
+                        } else {
+                            nbPoint += j-1;
+                        }
                     }
                 }
 
                 //South-West position
-                if((b[currentX+1][currentY-1] != null) && (currentX != 0) && (currentY != 7) && (b[currentX+1][currentY-1].getPlayer() != player)) {
+                if((currentX != 0) && (currentY != 7) && (b[currentX-1][currentY+1] != null) && (b[currentX-1][currentY+1].getPlayer() != player)) {
                     j = 2;
 
-                    while((b[currentX+j][currentY-j] != null) && ((currentX+j) < 7) && ((currentY-j) > 0) && (b[currentX+j][currentY-j].getPlayer() != player)) {
+                    while(((currentX-j) > 0) && ((currentY+j) < 7) && (b[currentX-j][currentY+j] != null) && (b[currentX-j][currentY+j].getPlayer() != player)) {
                         j++;
                     }
 
-                    if((b[currentX+j][currentY-j] != null) && ((currentX+j) <= 7) && ((currentY-j) >= 0) && (b[currentX+j][currentY-j].getPlayer() == player)) {
-                        nbPoint = j-1;
+                    if(((currentX-j) >= 0) && ((currentY+j) <= 7) && (b[currentX-j][currentY+j] != null) && (b[currentX-j][currentY+j].getPlayer() == player)) {
+                        if (first) {
+                            nbPoint=j;
+                        } else {
+                            nbPoint += j-1;
+                        }
                     }
                 }
 
@@ -382,33 +487,100 @@ public class Game implements Cloneable {
      *
      * @param player Player that plays
      * @param position Position of where the Player wants to play
+     * @throws PlayException
      */
-    public void play(Player player, Position position) {
-        if(this.state == State.PLAY ) {
-            if((board.getPositions(this, this.player1).length + board.getPositions(this, this.player2).length) < 64) {
-                if(this.getPlayablePositions(player).length != 0) {
-                    player.setCanPlay(true);
-                    this.board.placeDisk(player, position);
-                    this.rule.turnDisks(this, position);
-                    this.changePlayer();
-                }
+    public void play(Player player, Position position) throws PlayException {
+        if(player == this.getCurrentPlayer()) {
+            if(this.state == State.PLAY) {
+                if(player.counterOfDisks() > 0) {
+                    if((board.getPositions(this, this.player1).length + board.getPositions(this, this.player2).length) < 64) {
+                        player.setCanPlay(false);
 
-                else if(!getOtherPlayer().getCanPlay()){
-                    this.state = State.END;
+                        if(this.getPlayablePositions(player).length > 0) {
+                            Position[] playablePositions = this.getPlayablePositions(player);
+                            int i = 0;
+
+                            while(i < playablePositions.length) {
+                                if((position.getXCoordinate() == playablePositions[i].getXCoordinate()) && (position.getYCoordinate() == playablePositions[i].getYCoordinate())) {
+                                    player.setCanPlay(true);
+                                    this.board.placeDisk(player, position);
+
+                                    if(this.rule instanceof ReversiRule) {
+                                        player.removeADisk();
+                                    }
+
+                                    this.rule.turnDisks(this, position);
+
+                                    if(getPositions(this.getOtherPlayer()).length == 0) {
+                                        this.state = State.END;
+                                    }
+
+                                    this.changePlayer();
+                                }
+
+                                i++;
+                            }
+
+                            if(!player.getCanPlay()) {
+                                throw new PlayException("Not a playable position");
+                            }
+
+                        }
+
+                        else {
+                            if((this.rule instanceof ReversiRule) || !getOtherPlayer().getCanPlay()) {
+                                this.state = State.END;
+                            }
+
+                            this.changePlayer();
+                        }
+                    }
+
+                    else {
+                        this.state = State.END;
+                    }
                 }
 
                 else {
-                    player.setCanPlay(false);
+                    this.changePlayer();
+                }
+            }
+
+            else if ((this.state == State.INIT) && (this.rule instanceof ReversiRule)) {
+                Position[] playablePositions = this.getPlayablePositions(player);
+                player.setCanPlay(false);
+
+                if(playablePositions.length > 0) {
+                    int j=0;
+
+                    while(j < playablePositions.length) {
+                        if((position.getXCoordinate() == playablePositions[j].getXCoordinate()) && (position.getYCoordinate() == playablePositions[j].getYCoordinate())) {
+                            player.setCanPlay(true);
+                            this.board.placeDisk(player, position);
+                            player.removeADisk();
+                            this.changePlayer();
+
+                            if (playablePositions.length == 1) {
+                                this.state = State.PLAY;
+                            }
+                        }
+
+                        j++;
+                    }
+
+                    if(!player.getCanPlay()) {
+                        throw new PlayException("Not a playable position");
+                    }
                 }
             }
 
             else {
-                this.state = State.END;
+                throw new PlayException("You can't play, the State of the Game is not PLAY or INIT");
             }
         }
 
-        else if(this.state == State.INIT && (this.rule instanceof ReversiRule)) {
-
+        else{
+            throw new PlayException("Not the turn of this player");
         }
     }
 
@@ -440,6 +612,32 @@ public class Game implements Cloneable {
     }
 
     /**
+     * Private method which changes the current Player of the Game
+     */
+    private void changePlayer() {
+        if(this.currentPlayer == this.player1) {
+            this.currentPlayer = player2;
+        }
+
+        else {
+            this.currentPlayer = player1;
+        }
+    }
+
+    /**
+     * Private method which gets the other Player of the Game
+     */
+    Player getOtherPlayer() {
+        if(this.currentPlayer == this.player1) {
+            return player2;
+        }
+
+        else {
+            return player1;
+        }
+    }
+
+    /**
      * Add a PropertyChangeListener to the listener list.
      *
      * @param listener The PropertyChangeListener to be added
@@ -458,28 +656,21 @@ public class Game implements Cloneable {
     }
 
     /**
-     * Private method which changes the current Player of the Game
+     * Clones a Game
+     *
+     * @return Clone of a Game
      */
-    private void changePlayer() {
-        if(this.currentPlayer == this.player1) {
-            this.currentPlayer = player2;
+    public Object clone() {
+        Object o = null;
+
+        try {
+            o = super.clone();
         }
 
-        else {
-            this.currentPlayer = player1;
-        }
-    }
-
-    /**
-     * Private method which gets the other Player of the Game
-     */
-    private Player getOtherPlayer() {
-        if(this.currentPlayer == this.player1) {
-            return player2;
+        catch (CloneNotSupportedException e) {
+            e.printStackTrace();
         }
 
-        else {
-            return player1;
-        }
+        return o;
     }
 }

@@ -14,7 +14,7 @@ public abstract class Counter {
      * @param player Player that plays
      * @return The number of points of the given Player in the given Game
      */
-    static int getNbPoint(Game game, Player player) {
+    static int getNbPoints(Game game, Player player) {
         int retour = 0;
 
         Disk[][] board = game.getBoard().getBoard();

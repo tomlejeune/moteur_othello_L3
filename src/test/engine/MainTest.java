@@ -15,7 +15,13 @@ public class MainTest {
 
         System.out.println("\nTEST : \n");
 
-        game.play(player1, new Position(5, 3));
+        try {
+            game.play(player1, new Position(5, 3));
+        }
+
+        catch (PlayException exception) {
+            System.out.println(exception.getMessage());
+        }
 
         System.out.println(game.getBoard().toString());
 

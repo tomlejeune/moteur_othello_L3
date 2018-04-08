@@ -50,15 +50,7 @@ public class OthelloRule extends Rule {
      * @return The first Player to play in the given Game
      */
     Player getFirstPlayer(Game game) {
-        double randomNumber = Math.random();
-
-        if (randomNumber < 0.5) {
-            return game.getPlayer1();
-        }
-
-        else {
-            return game.getPlayer2();
-        }
+        return game.getPlayer1();
     }
 
     /**
@@ -565,7 +557,7 @@ public class OthelloRule extends Rule {
         }
 
         else {
-            if(Counter.getNbPoint(game, game.getPlayer1()) > Counter.getNbPoint(game, game.getPlayer2())) {
+            if(Counter.getNbPoints(game, game.getPlayer1()) > Counter.getNbPoints(game, game.getPlayer2())) {
                 retour = game.getPlayer1();
             }
 
@@ -595,7 +587,7 @@ public class OthelloRule extends Rule {
         }
 
         else {
-            if(Counter.getNbPoint(game, game.getPlayer1()) > Counter.getNbPoint(game, game.getPlayer2())) {
+            if(Counter.getNbPoints(game, game.getPlayer1()) > Counter.getNbPoints(game, game.getPlayer2())) {
                 retour = game.getPlayer2();
             }
 
@@ -625,7 +617,7 @@ public class OthelloRule extends Rule {
         }
 
         else {
-            if(Counter.getNbPoint(game, game.getPlayer1()) == Counter.getNbPoint(game, game.getPlayer2())) {
+            if(Counter.getNbPoints(game, game.getPlayer1()) == Counter.getNbPoints(game, game.getPlayer2())) {
                 retour = true;
             }
         }

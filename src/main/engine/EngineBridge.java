@@ -16,7 +16,7 @@ public class EngineBridge {
      * @return The HumanPlayer instance
      */
     public static HumanPlayer createHumanPlayer(String nickname) {
-        return createHumanPlayer(null, null, nickname);
+        return createHumanPlayer(nickname, null, null);
     }
 
     /**
@@ -26,7 +26,7 @@ public class EngineBridge {
      * @param nickname The name of the player to create
      * @return The HumanPlayer instance
      */
-    public static HumanPlayer createHumanPlayer(String mail, String hashPassword, String nickname) {
+    public static HumanPlayer createHumanPlayer(String nickname, String mail, String hashPassword) {
         return new HumanPlayer(UUID.randomUUID(), nickname, mail, hashPassword);
     }
 
@@ -65,9 +65,8 @@ public class EngineBridge {
      * Finds an random HumanPlayer to play a game with
      * @return The HumanPlayer instance
      */
-    public static Player getRandomOpponent() {
-        // TODO
-        return null;
+    public static HumanPlayer getRandomOpponent(HumanPlayer player) {
+        return player.findRandomOpponent();
     }
 
     /**
@@ -109,11 +108,11 @@ public class EngineBridge {
      * @param player1 The first Player
      * @param player2 The second Player
      * @param rule The rule for the game
-     * @param board Disks played in the Game
+     * @param positions Positions played in the Game
      * @return The Game instance
      */
-    public static Game createGame(UUID id, Player player1, Player player2, Rule rule, Disk[][] board) {
-        return new Game(id, player1, player2, rule, board);
+    public static Game createGame(UUID id, Player player1, Player player2, Rule rule, Position[] positions) {
+        return new Game(id, player1, player2, rule, positions);
     }
 
     /**
