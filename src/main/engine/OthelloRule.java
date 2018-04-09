@@ -1,7 +1,5 @@
 package engine;
 
-import java.awt.Color;
-
 /**
  * OthelloRule is a specific Rule ...
  */
@@ -149,7 +147,7 @@ public class OthelloRule extends Rule {
             }
 
             //on verifie la position sud-est du disk en cours
-            if(((currentY+1) <= 7) && ((currentY+1) <= 7 ) && (board[currentX+1][currentY+1] != null) && (board[currentX+1][currentY+1].getPlayer() != player)) {
+            if(((currentX+1) <= 7) && ((currentY+1) <= 7 ) && (board[currentX+1][currentY+1] != null) && (board[currentX+1][currentY+1].getPlayer() != player)) {
                 int j = 2;
 
                 while(((currentX+j) < 8) && ((currentY+j) < 8) && (board[currentX+j][currentY+j] != null) && (board[currentX+j][currentY+j].getPlayer() != player)) {
@@ -167,7 +165,7 @@ public class OthelloRule extends Rule {
             }
 
             //on verifie la position nord-ouest du disk en cours
-            if(((currentY-1) >= 0) && ((currentY-1) >= 0) && (board[currentX-1][currentY-1] != null) && (board[currentX-1][currentY-1].getPlayer() != player)) {
+            if(((currentX-1) >= 0) && ((currentY-1) >= 0) && (board[currentX-1][currentY-1] != null) && (board[currentX-1][currentY-1].getPlayer() != player)) {
                 int j = -2;
 
                 while(((currentX + j) >= 0) && ((currentY + j) >= 0) && (board[currentX+j][currentY+j] != null) && (board[currentX+j][currentY+j].getPlayer() != player)) {

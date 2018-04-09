@@ -21,7 +21,7 @@ public enum EnumRule implements Serializable {
      *
      * @param rule Rule wanted
      */
-    EnumRule(String rule){
+    EnumRule(String rule) {
         if(rule != "OTHELLO" && rule != "REVERSI") {
             System.out.println("Erreur de règle : La règle indiquée n'existe pas");
         }
@@ -29,7 +29,6 @@ public enum EnumRule implements Serializable {
         else {
             this.rule = rule;
         }
-
     }
 
     /**

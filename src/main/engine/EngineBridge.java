@@ -134,7 +134,13 @@ public class EngineBridge {
      * @param player The player to save
      */
     public static void savePlayer(Player player) {
-        //((HumanPlayer) player).createAccount(((HumanPlayer) player).getMail(), ((HumanPlayer) player).getHashPassword());
+        try {
+            daosgbd.savePlayer(player);
+        }
+
+        catch(DAOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -144,13 +150,29 @@ public class EngineBridge {
      * @return The Player instance, null if no matching player was found
      */
     public static Player loadPlayer(String mail, String password) {
-        /*try {
+        try {
             return daosgbd.findPlayer(mail, password);
         }
 
         catch(DAOException e) {
             System.out.println(e.getMessage());
-        }*/
+        }
+
+        return null;
+    }
+
+    /**
+     * Finds the Player matching the given id
+     * @param id The id of the Player to find
+     */
+    public static Player loadPlayer(UUID id) {
+        try {
+            return daosgbd.findPlayer(id);
+        }
+
+        catch(DAOException e) {
+            System.out.println(e.getMessage());
+        }
 
         return null;
     }
@@ -160,7 +182,13 @@ public class EngineBridge {
      * @param game The Game to save
      */
     public static void saveGame(Game game) {
-        //daosgbd.saveGame(game);
+        try {
+            daosgbd.saveGame(game);
+        }
+
+        catch(DAOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -179,13 +207,13 @@ public class EngineBridge {
      * @return The Game instance
      */
     public static Game loadGame(GameDescriptor gameDesc) {
-        /*try {
+        try {
             return daosgbd.findGame(gameDesc.getId());
         }
 
         catch(DAOException e) {
             System.out.println(e.getMessage());
-        }*/
+        }
 
         return null;
     }
@@ -196,7 +224,13 @@ public class EngineBridge {
      * @param password The password of the Player
      */
     public static void removePlayer(String mail, String password) {
-         //daosgbd.findPlayer()
+        try {
+            daosgbd.deletePlayer(daosgbd.findPlayer(mail, password).getId());
+        }
+
+        catch(DAOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -204,21 +238,12 @@ public class EngineBridge {
      * @param gameDesc The game to remove
      */
     public static void removeGame(GameDescriptor gameDesc) {
-        /*try {
+        try {
             daosgbd.deleteGame(gameDesc.getId());
         }
 
         catch(DAOException e) {
             System.out.println(e.getMessage());
-        }*/
-    }
-
-    /**
-     * Finds the HumanPlayer matching the given mail address
-     * @param mail The mail address of the Player to find
-     */
-    public static HumanPlayer findHumanPlayer(String mail) {
-        // TODO
-        return null;
+        }
     }
 }

@@ -1,6 +1,5 @@
 package engine;
 
-import java.awt.Color;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
 import java.io.Serializable;
@@ -36,7 +35,7 @@ public class Disk implements Serializable {
     /**
      * Color of the Disk.
      */
-    private Color color;
+    private EnumColor color;
 
     /**
      * Constructs a Disk with a color.
@@ -44,7 +43,7 @@ public class Disk implements Serializable {
      * @param player The Player that owns the Disk
      * @param color The color of the Disk
      */
-    Disk(Game game, Player player, Color color) {
+    Disk(Game game, Player player, EnumColor color) {
         this.changeSupport = new PropertyChangeSupport(this);
 
         this.game = game;
@@ -76,7 +75,7 @@ public class Disk implements Serializable {
      *
      * @return The color of the Disk
      */
-    public Color getColor() {
+    public EnumColor getColor() {
         return this.color;
     }
 
@@ -85,8 +84,8 @@ public class Disk implements Serializable {
      *
      * @param color The new color of the Disk
      */
-    public void setColor(Color color) {
-        Color oldColor = this.color;
+    public void setColor(EnumColor color) {
+        EnumColor oldColor = this.color;
         this.color = color;
 
         this.changeSupport.firePropertyChange(COLOR_PROPERTY, oldColor, color);

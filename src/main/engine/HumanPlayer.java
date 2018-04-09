@@ -1,5 +1,6 @@
 package engine;
 
+import fr.univubs.inf1603.othello.DAO.DAOException;
 import fr.univubs.inf1603.othello.DAOSGDB.DAOSGBD;
 
 import java.util.UUID;
@@ -144,7 +145,13 @@ public class HumanPlayer extends Player {
         this.setHashPassword(password);
         this.setNickname(name);
 
-        //daosgbd.savePlayer(this);
+        try {
+            daosgbd.savePlayer(this);
+        }
+
+        catch (DAOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -157,7 +164,14 @@ public class HumanPlayer extends Player {
         DAOSGBD daosgbd = new DAOSGBD();
 
         if(this.mail == email && this.hashPassword == password) {
-            //daosgbd.deletePlayer(this);
+            try {
+                daosgbd.deletePlayer(this.getId());
+            }
+
+            catch (DAOException e) {
+                System.out.println(e.getMessage());
+            }
+
         }
     }
 

@@ -1,6 +1,5 @@
 package engine;
 
-import java.awt.*;
 import java.io.Serializable;
 import java.util.UUID;
 import java.beans.PropertyChangeSupport;
@@ -165,7 +164,7 @@ public abstract class Player implements Serializable {
      * @param game The Game played
      * @param color The Color of the Disks
      */
-    void initializeDisks(Game game, Color color) {
+    void initializeDisks(Game game, EnumColor color) {
         for(int i  = 0 ; i < this.disks.length ; i++) {
             this.disks[i] = new Disk(game, this, color);
         }

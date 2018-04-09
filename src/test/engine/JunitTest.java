@@ -1,6 +1,5 @@
 package engine;
 
-import java.awt.Color;
 import java.util.UUID;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,14 +56,14 @@ public class JunitTest {
 
         for(int i = 0 ; i < disksPlayer1.length ; i++) {
             assertEquals(player1, disksPlayer1[i].getPlayer());
-            assertEquals(Color.BLACK, disksPlayer1[i].getColor());
+            assertEquals(EnumColor.BLACK, disksPlayer1[i].getColor());
         }
 
         Disk[] disksPlayer2 = player2.getDisks();
 
         for(int i = 0 ; i < disksPlayer2.length ; i++) {
             assertEquals(player2, disksPlayer2[i].getPlayer());
-            assertEquals(Color.WHITE, disksPlayer2[i].getColor());
+            assertEquals(EnumColor.WHITE, disksPlayer2[i].getColor());
         }
     }
 

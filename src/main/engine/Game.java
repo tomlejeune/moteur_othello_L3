@@ -1,10 +1,11 @@
 package engine;
 
+import bot.Bot;
+
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
 import java.io.Serializable;
 import java.util.UUID;
-import java.awt.Color;
 
 /**
  * Game is a game of Othello. Every Game is unique and is distinguished by an UUID.
@@ -129,11 +130,20 @@ public class Game implements Cloneable, Serializable {
         this.setPlayer1(player1);
         this.player2 = null;
         this.setPlayer2(player2);
+
+        if(this.player1 instanceof Bot) {
+            ((Bot) this.player1).setGame(this);
+        }
+
+        if(this.player2 instanceof Bot) {
+            ((Bot) this.player2).setGame(this);
+        }
+
         this.currentPlayer = null;
         this.setCurrentPlayer(this.rule.getFirstPlayer(this));
 
-        this.getCurrentPlayer().initializeDisks(this, Color.BLACK);
-        this.getOtherPlayer().initializeDisks(this, Color.WHITE);
+        this.getCurrentPlayer().initializeDisks(this, EnumColor.BLACK);
+        this.getOtherPlayer().initializeDisks(this, EnumColor.WHITE);
 
         this.state = null;
         this.setState(State.INIT);
@@ -169,11 +179,20 @@ public class Game implements Cloneable, Serializable {
         this.setPlayer1(player1);
         this.player2 = null;
         this.setPlayer2(player2);
+
+        if(this.player1 instanceof Bot) {
+            ((Bot) this.player1).setGame(this);
+        }
+
+        if(this.player2 instanceof Bot) {
+            ((Bot) this.player2).setGame(this);
+        }
+
         this.currentPlayer = null;
         this.setCurrentPlayer(this.rule.getFirstPlayer(this));
 
-        this.currentPlayer.initializeDisks(this, Color.BLACK);
-        this.getOtherPlayer().initializeDisks(this, Color.WHITE);
+        this.currentPlayer.initializeDisks(this, EnumColor.BLACK);
+        this.getOtherPlayer().initializeDisks(this, EnumColor.WHITE);
 
         this.state = null;
         this.setState(State.INIT);
