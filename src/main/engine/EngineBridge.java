@@ -1,12 +1,19 @@
 package engine;
 
 import java.util.UUID;
-import java.awt.Color;
+
+import bot.BotDescription;
+import bot.BotManager;
+import bot.Bot;
+import fr.univubs.inf1603.othello.DAO.DAOException;
+import fr.univubs.inf1603.othello.DAOSGDB.DAOSGBD;
 
 /**
  * EngineBridge provides static methods to use the engine classes of the othello project.
  */
 public class EngineBridge {
+
+    private static final DAOSGBD daosgbd = new DAOSGBD();
 
     /**
      * Creates a non-persisted HumanPlayer
@@ -40,22 +47,22 @@ public class EngineBridge {
     }
 
     /**
-     * Returns an enumeration of the available difficulties for the bot players
-     * @return The enumeration DifficultyBot
+     * Returns an array of BotDescription
+     *
+     * @return An array of BotDescription
      */
-    public static DifficultyBot getBotDifficulties() {
-        // TODO
-        return null;
+    public static BotDescription[] getBots() {
+        return BotManager.getBots();
     }
 
     /**
-     * Returns the Bot for the given difficulty
-     * @param difficulty The difficulty of the Bot
+     * Returns the Bot for the given BotDescription
+     *
+     * @param botDescription BotDescription of a Bot
      * @return The instance of the Bot
      */
-    public static Bot chooseBot(DifficultyBot difficulty) {
-        // TODO
-        return null;
+    public static Bot chooseBot(BotDescription botDescription) {
+        return botDescription.createBot(null);
     }
 
     /**
@@ -127,7 +134,7 @@ public class EngineBridge {
      * @param player The player to save
      */
     public static void savePlayer(Player player) {
-        // TODO
+        //((HumanPlayer) player).createAccount(((HumanPlayer) player).getMail(), ((HumanPlayer) player).getHashPassword());
     }
 
     /**
@@ -137,7 +144,14 @@ public class EngineBridge {
      * @return The Player instance, null if no matching player was found
      */
     public static Player loadPlayer(String mail, String password) {
-        // TODO
+        /*try {
+            return daosgbd.findPlayer(mail, password);
+        }
+
+        catch(DAOException e) {
+            System.out.println(e.getMessage());
+        }*/
+
         return null;
     }
 
@@ -146,7 +160,7 @@ public class EngineBridge {
      * @param game The Game to save
      */
     public static void saveGame(Game game) {
-        // TODO
+        //daosgbd.saveGame(game);
     }
 
     /**
@@ -165,7 +179,14 @@ public class EngineBridge {
      * @return The Game instance
      */
     public static Game loadGame(GameDescriptor gameDesc) {
-        // TODO
+        /*try {
+            return daosgbd.findGame(gameDesc.getId());
+        }
+
+        catch(DAOException e) {
+            System.out.println(e.getMessage());
+        }*/
+
         return null;
     }
 
@@ -175,7 +196,7 @@ public class EngineBridge {
      * @param password The password of the Player
      */
     public static void removePlayer(String mail, String password) {
-        // TODO
+         //daosgbd.findPlayer()
     }
 
     /**
@@ -183,7 +204,13 @@ public class EngineBridge {
      * @param gameDesc The game to remove
      */
     public static void removeGame(GameDescriptor gameDesc) {
-        // TODO
+        /*try {
+            daosgbd.deleteGame(gameDesc.getId());
+        }
+
+        catch(DAOException e) {
+            System.out.println(e.getMessage());
+        }*/
     }
 
     /**

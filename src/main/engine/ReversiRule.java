@@ -98,7 +98,7 @@ public class ReversiRule extends Rule {
 
                 //on vérifie la position sud du disk en cours
                 //on regarde si la position n'est pas nulle et si le disk appartient à l'autre joueur
-                if((board[currentX][currentY+1] != null) && (board[currentX][currentY+1].getPlayer() != player)) {
+                if(((currentY+1) <=7) && (board[currentX][currentY+1] != null) && (board[currentX][currentY+1].getPlayer() != player)) {
                     int j = 2;
 
                     //on regarde jusqu'ou va l'alignement des disk de l'autre jouerur en prenant garde a ne pas dépasser du board
@@ -119,14 +119,14 @@ public class ReversiRule extends Rule {
                 }
 
                 //on verifie la position nord du disk en cours
-                if((board[currentX][currentY-1] != null) && (board[currentX][currentY-1].getPlayer() != player)) {
+                if(((currentY-1) >= 0) && (board[currentX][currentY-1] != null) && (board[currentX][currentY-1].getPlayer() != player)) {
                     int j = -2;
 
                     while(((currentY+j) >= 0) && (board[currentX][currentY+j] != null) && (board[currentX][currentY+j].getPlayer() != player)) {
                         j--;
                     }
 
-                    if((board[currentX][currentY+j] == null) && ((currentY+j) >= 0)) {
+                    if(((currentY+j) >= 0) && (board[currentX][currentY+j] == null)) {
                         Position newPosition = new Position(currentX,(currentY+j));
 
                         if(!contains(playablePositions, newPosition)) {
@@ -137,14 +137,15 @@ public class ReversiRule extends Rule {
                 }
 
                 //on verifie la position est du disk en cours
-                if((board[currentX+1][currentY] != null) && (board[currentX+1][currentY].getPlayer() != player)) {
+                if(((currentX+1) <= 7) && (board[currentX+1][currentY] != null) && (board[currentX+1][currentY].getPlayer() != player)) {
                     int j = 2;
 
                     while(((currentX+j) < 8) && (board[currentX+j][currentY] != null) && (board[currentX+j][currentY].getPlayer() != player)) {
+                        System.out.println("j : "+j);
                         j++;
                     }
 
-                    if((board[currentX+j][currentY] == null) && ((currentX+j) < 8)) {
+                    if(((currentX+j) < 8) && (board[currentX+j][currentY] == null)) {
                         Position newPosition = new Position((currentX+j),currentY);
 
                         if(!contains(playablePositions, newPosition)) {
@@ -155,14 +156,14 @@ public class ReversiRule extends Rule {
                 }
 
                 //on verifie la position ouest du disk en cours
-                if((board[currentX-1][currentY] != null) && (board[currentX-1][currentY].getPlayer() != player)) {
+                if(((currentX-1) >= 0) && (board[currentX-1][currentY] != null) && (board[currentX-1][currentY].getPlayer() != player)) {
                     int j = -2;
 
                     while(((currentX+j) >= 0) && (board[currentX+j][currentY] != null) && (board[currentX+j][currentY].getPlayer() != player)) {
                         j--;
                     }
 
-                    if((board[currentX+j][currentY] == null) && ((currentX+j) >= 0)) {
+                    if(((currentX+j) >= 0) && (board[currentX+j][currentY] == null)) {
                         Position newPosition = new Position((currentX+j),currentY);
 
                         if(!contains(playablePositions, newPosition)) {
@@ -173,14 +174,14 @@ public class ReversiRule extends Rule {
                 }
 
                 //on verifie la position sud-est du disk en cours
-                if((board[currentX+1][currentY+1] != null) && (board[currentX+1][currentY+1].getPlayer() != player)) {
+                if(((currentY+1) <= 7) && ((currentY+1) <= 7 ) && (board[currentX+1][currentY+1] != null) && (board[currentX+1][currentY+1].getPlayer() != player)) {
                     int j = 2;
 
                     while(((currentX+j) < 8) && ((currentY+j) < 8) && (board[currentX+j][currentY+j] != null) && (board[currentX+j][currentY+j].getPlayer() != player)) {
                         j++;
                     }
 
-                    if((board[currentX+j][currentY+j] == null) && ((currentX+j) < 8) && ((currentY+j) < 8)) {
+                    if(((currentX+j) < 8) && ((currentY+j) < 8) && (board[currentX+j][currentY+j] == null)) {
                         Position newPosition = new Position((currentX+j),(currentY+j));
 
                         if(!contains(playablePositions, newPosition)) {
@@ -191,14 +192,14 @@ public class ReversiRule extends Rule {
                 }
 
                 //on verifie la position nord-ouest du disk en cours
-                if((board[currentX-1][currentY-1] != null) && (board[currentX-1][currentY-1].getPlayer() != player)) {
+                if(((currentY-1) >= 0) && ((currentY-1) >= 0) && (board[currentX-1][currentY-1] != null) && (board[currentX-1][currentY-1].getPlayer() != player)) {
                     int j = -2;
 
                     while(((currentX + j) >= 0) && ((currentY + j) >= 0) && (board[currentX+j][currentY+j] != null) && (board[currentX+j][currentY+j].getPlayer() != player)) {
                         j--;
                     }
 
-                    if((board[currentX+j][currentY+j] == null) && ((currentX + j) >= 0) && ((currentY + j) >= 0)) {
+                    if(((currentX + j) >= 0) && ((currentY + j) >= 0) && (board[currentX+j][currentY+j] == null)) {
                         Position newPosition = new Position((currentX+j),(currentY + j));
 
                         if (!contains(playablePositions, newPosition)) {
@@ -209,14 +210,14 @@ public class ReversiRule extends Rule {
                 }
 
                 //on verifie la position nord-est du disk en cours
-                if((board[currentX+1][currentY-1] != null) && (board[currentX+1][currentY-1].getPlayer() != player)) {
+                if(((currentX+1) < 8) && ((currentY-1) >= 0) && (board[currentX+1][currentY-1] != null) && (board[currentX+1][currentY-1].getPlayer() != player)) {
                     int j = 2;
 
                     while(((currentX+j) < 8) && ((currentY-j) >= 0) && (board[currentX+j][currentY-j] != null) && (board[currentX+j][currentY-j].getPlayer() != player)) {
                         j++;
                     }
 
-                    if((board[currentX+j][currentY-j] == null) && ((currentX+j) < 8) && ((currentY-j) >= 0)) {
+                    if(((currentX+j) < 8) && ((currentY-j) >= 0) && (board[currentX+j][currentY-j] == null) ) {
                         Position newPosition = new Position((currentX+j),(currentY-j));
 
                         if(!contains(playablePositions, newPosition)) {
@@ -227,14 +228,14 @@ public class ReversiRule extends Rule {
                 }
 
                 //on verifie la position sud-ouest du disk en cours
-                if((board[currentX-1][currentY+1] != null) && (board[currentX-1][currentY+1].getPlayer() != player)) {
+                if(((currentX-1) >= 0) && ((currentY+1) < 8) && (board[currentX-1][currentY+1] != null) && (board[currentX-1][currentY+1].getPlayer() != player)) {
                     int j = 2;
 
                     while(((currentX-j) >= 0) && ((currentY+j) < 8) && (board[currentX-j][currentY+j] != null) && (board[currentX-j][currentY+j].getPlayer() != player)) {
                         j++;
                     }
 
-                    if(((currentX-j) >= 0) && (board[currentX-j][currentY+j] == null) && ((currentY+j) < 8)) {
+                    if(((currentX-j) >= 0) && ((currentY+j) < 8) && (board[currentX-j][currentY+j] == null)) {
                         Position newPosition = new Position((currentX-j),(currentY + j));
 
                         if(!contains(playablePositions, newPosition)) {
@@ -245,8 +246,6 @@ public class ReversiRule extends Rule {
                 }
             }
         }
-
-
 
         index = 0;
 

@@ -52,6 +52,15 @@ public class GameDescriptor implements Serializable {
     }
 
     /**
+     * Gets the UUID of the Game.
+     *
+     * @return The UUID of the Game
+     */
+    public UUID getId() {
+        return this.id;
+    }
+
+    /**
      * Gets the Rule of the Game.
      *
      * @return The Rule of the Game

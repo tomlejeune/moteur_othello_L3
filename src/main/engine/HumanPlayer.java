@@ -1,5 +1,7 @@
 package engine;
 
+import fr.univubs.inf1603.othello.DAOSGDB.DAOSGBD;
+
 import java.util.UUID;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
@@ -136,7 +138,13 @@ public class HumanPlayer extends Player {
      * @param name Name of the HumanPlayer
      */
     void createAccount(String email, String password, String name) {
+        DAOSGBD daosgbd = new DAOSGBD();
 
+        this.setMail(email);
+        this.setHashPassword(password);
+        this.setNickname(name);
+
+        //daosgbd.savePlayer(this);
     }
 
     /**
@@ -146,7 +154,11 @@ public class HumanPlayer extends Player {
      * @param password Password of the HumanPlayer
      */
     void removeAccount(String email, String password) {
+        DAOSGBD daosgbd = new DAOSGBD();
 
+        if(this.mail == email && this.hashPassword == password) {
+            //daosgbd.deletePlayer(this);
+        }
     }
 
     /**
