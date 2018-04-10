@@ -1,5 +1,6 @@
 package engine;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import bot.BotDescription;
@@ -12,8 +13,6 @@ import fr.univubs.inf1603.othello.DAOSGDB.DAOSGBD;
  * EngineBridge provides static methods to use the engine classes of the othello project.
  */
 public class EngineBridge {
-
-    private static final DAOSGBD daosgbd = new DAOSGBD();
 
     /**
      * Creates a non-persisted HumanPlayer
@@ -62,7 +61,7 @@ public class EngineBridge {
      * @return The instance of the Bot
      */
     public static Bot chooseBot(BotDescription botDescription) {
-        return botDescription.createBot(null);
+        return botDescription.createBot();
     }
 
     /**
@@ -134,6 +133,8 @@ public class EngineBridge {
      * @param player The player to save
      */
     public static void savePlayer(Player player) {
+        DAOSGBD daosgbd = new DAOSGBD();
+
         try {
             daosgbd.savePlayer(player);
         }
@@ -150,6 +151,8 @@ public class EngineBridge {
      * @return The Player instance, null if no matching player was found
      */
     public static Player loadPlayer(String mail, String password) {
+        DAOSGBD daosgbd = new DAOSGBD();
+
         try {
             return daosgbd.findPlayer(mail, password);
         }
@@ -166,6 +169,8 @@ public class EngineBridge {
      * @param id The id of the Player to find
      */
     public static Player loadPlayer(UUID id) {
+        DAOSGBD daosgbd = new DAOSGBD();
+
         try {
             return daosgbd.findPlayer(id);
         }
@@ -182,6 +187,8 @@ public class EngineBridge {
      * @param game The Game to save
      */
     public static void saveGame(Game game) {
+        DAOSGBD daosgbd = new DAOSGBD();
+
         try {
             daosgbd.saveGame(game);
         }
@@ -197,8 +204,29 @@ public class EngineBridge {
      * @return An array of GameDescriptor of the Player games
      */
     public static GameDescriptor[] loadGames(Player player) {
-        // TODO
-        return null;
+        DAOSGBD daosgbd = new DAOSGBD();
+        ArrayList<Game> games = new ArrayList<Game>();
+
+        try {
+            games = daosgbd.findGames(player.getId());
+        }
+
+        catch(DAOException e) {
+            e.printStackTrace();
+        }
+
+        GameDescriptor[] gameDescriptors = new GameDescriptor[games.size()];
+
+        int i = 0;
+
+        for(Game game : games) {
+            GameDescriptor gameDescriptor = new GameDescriptor(game.getUUID(), game.getRule(), game.getState(), game.getPlayer1(), game.getPlayer2());
+            gameDescriptors[i] = gameDescriptor;
+
+            i++;
+        }
+
+        return gameDescriptors;
     }
 
     /**
@@ -207,6 +235,8 @@ public class EngineBridge {
      * @return The Game instance
      */
     public static Game loadGame(GameDescriptor gameDesc) {
+        DAOSGBD daosgbd = new DAOSGBD();
+
         try {
             return daosgbd.findGame(gameDesc.getId());
         }
@@ -224,6 +254,8 @@ public class EngineBridge {
      * @param password The password of the Player
      */
     public static void removePlayer(String mail, String password) {
+        DAOSGBD daosgbd = new DAOSGBD();
+
         try {
             daosgbd.deletePlayer(daosgbd.findPlayer(mail, password).getId());
         }
@@ -238,6 +270,8 @@ public class EngineBridge {
      * @param gameDesc The game to remove
      */
     public static void removeGame(GameDescriptor gameDesc) {
+        DAOSGBD daosgbd = new DAOSGBD();
+
         try {
             daosgbd.deleteGame(gameDesc.getId());
         }

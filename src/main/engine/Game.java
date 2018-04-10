@@ -130,15 +130,6 @@ public class Game implements Cloneable, Serializable {
         this.setPlayer1(player1);
         this.player2 = null;
         this.setPlayer2(player2);
-
-        if(this.player1 instanceof Bot) {
-            ((Bot) this.player1).setGame(this);
-        }
-
-        if(this.player2 instanceof Bot) {
-            ((Bot) this.player2).setGame(this);
-        }
-
         this.currentPlayer = null;
         this.setCurrentPlayer(this.rule.getFirstPlayer(this));
 
@@ -156,6 +147,14 @@ public class Game implements Cloneable, Serializable {
 
         if(this.rule instanceof OthelloRule) {
             this.setState(State.PLAY);
+        }
+
+        if(this.player1 instanceof Bot) {
+            ((Bot) this.player1).setGame(this);
+        }
+
+        if(this.player2 instanceof Bot) {
+            ((Bot) this.player2).setGame(this);
         }
     }
 
@@ -179,15 +178,6 @@ public class Game implements Cloneable, Serializable {
         this.setPlayer1(player1);
         this.player2 = null;
         this.setPlayer2(player2);
-
-        if(this.player1 instanceof Bot) {
-            ((Bot) this.player1).setGame(this);
-        }
-
-        if(this.player2 instanceof Bot) {
-            ((Bot) this.player2).setGame(this);
-        }
-
         this.currentPlayer = null;
         this.setCurrentPlayer(this.rule.getFirstPlayer(this));
 
@@ -223,6 +213,14 @@ public class Game implements Cloneable, Serializable {
         }
 
         this.board.setBoard(b);
+
+        if(this.player1 instanceof Bot) {
+            ((Bot) this.player1).setGame(this);
+        }
+
+        if(this.player2 instanceof Bot) {
+            ((Bot) this.player2).setGame(this);
+        }
     }
 
     /**
@@ -632,57 +630,47 @@ public class Game implements Cloneable, Serializable {
     public void play(Player player, Position position) throws PlayException {
         if(player == this.getCurrentPlayer()) {
             if(this.state == State.PLAY) {
-                if(player.counterOfDisks() > 0) {
-                    if((board.getPositions(this, this.player1).length + board.getPositions(this, this.player2).length) < 64) {
-                        player.setCanPlay(false);
+                if((board.getPositions(this, this.player1).length + board.getPositions(this, this.player2).length) < 64) {
+                    player.setCanPlay(false);
 
-                        if(this.getPlayablePositions(player).length > 0) {
-                            Position[] playablePositions = this.getPlayablePositions(player);
-                            int i = 0;
+                    if(this.getPlayablePositions(player).length > 0) {
+                        Position[] playablePositions = this.getPlayablePositions(player);
+                        int i = 0;
 
-                            while(i < playablePositions.length) {
-                                if((position.getXCoordinate() == playablePositions[i].getXCoordinate()) && (position.getYCoordinate() == playablePositions[i].getYCoordinate())) {
-                                    player.setCanPlay(true);
-                                    this.board.placeDisk(player, position);
+                        while(i < playablePositions.length) {
+                            if((position.getXCoordinate() == playablePositions[i].getXCoordinate()) && (position.getYCoordinate() == playablePositions[i].getYCoordinate())) {
+                                player.setCanPlay(true);
+                                this.board.placeDisk(player, position);
 
-                                    if(this.rule instanceof ReversiRule) {
-                                        player.removeADisk();
-                                    }
+                                this.rule.turnDisks(this, position);
 
-                                    this.rule.turnDisks(this, position);
-
-                                    if(getPositions(this.getOtherPlayer()).length == 0) {
-                                        this.state = State.END;
-                                    }
-
-                                    this.changePlayer();
+                                if(getPositions(this.getOtherPlayer()).length == 0) {
+                                    this.setState(State.END);
                                 }
 
-                                i++;
+                                this.changePlayer();
                             }
 
-                            if(!player.getCanPlay()) {
-                                throw new PlayException("Not a playable position");
-                            }
-
+                            i++;
                         }
 
-                        else {
-                            if((this.rule instanceof ReversiRule) || !getOtherPlayer().getCanPlay()) {
-                                this.state = State.END;
-                            }
-
-                            this.changePlayer();
+                        if(!player.getCanPlay()) {
+                            throw new PlayException("Not a playable position");
                         }
+
                     }
 
                     else {
-                        this.state = State.END;
+                        if((this.rule instanceof ReversiRule) || !getOtherPlayer().getCanPlay()) {
+                            this.setState(State.END);
+                        }
+
+                        this.changePlayer();
                     }
                 }
 
                 else {
-                    this.changePlayer();
+                    this.setState(State.END);
                 }
             }
 
@@ -691,17 +679,16 @@ public class Game implements Cloneable, Serializable {
                 player.setCanPlay(false);
 
                 if(playablePositions.length > 0) {
-                    int j=0;
+                    int j = 0;
 
                     while(j < playablePositions.length) {
                         if((position.getXCoordinate() == playablePositions[j].getXCoordinate()) && (position.getYCoordinate() == playablePositions[j].getYCoordinate())) {
                             player.setCanPlay(true);
                             this.board.placeDisk(player, position);
-                            player.removeADisk();
                             this.changePlayer();
 
                             if (playablePositions.length == 1) {
-                                this.state = State.PLAY;
+                                this.setState(State.PLAY);
                             }
                         }
 
@@ -717,9 +704,13 @@ public class Game implements Cloneable, Serializable {
             else {
                 throw new PlayException("You can't play, the State of the Game is not PLAY or INIT");
             }
+
+            if(this.getPlayablePositions(player).length == 0 && this.getPlayablePositions(this.getOtherPlayer()).length == 0) {
+                this.setState(State.END);
+            }
         }
 
-        else{
+        else {
             throw new PlayException("Not the turn of this player");
         }
     }
