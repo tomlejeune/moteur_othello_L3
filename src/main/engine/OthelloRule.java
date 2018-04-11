@@ -545,11 +545,11 @@ public class OthelloRule extends Rule {
     Player getWinner(Game game) {
         Player retour = null;
 
-        if((game.getPlayer1() instanceof HumanPlayer) &&((HumanPlayer) game.getPlayer1()).getForfeit()) {
+        if(game.getPlayer1().getForfeit()) {
             retour = game.getPlayer2();
         }
 
-        else if((game.getPlayer2() instanceof HumanPlayer) && ((HumanPlayer) game.getPlayer2()).getForfeit()) {
+        else if(game.getPlayer2().getForfeit()) {
             retour = game.getPlayer1();
         }
 
@@ -575,11 +575,11 @@ public class OthelloRule extends Rule {
     Player getLoser(Game game) {
         Player retour = null;
 
-        if((game.getPlayer1() instanceof HumanPlayer) &&((HumanPlayer) game.getPlayer1()).getForfeit()) {
+        if(game.getPlayer1().getForfeit()) {
             retour = game.getPlayer1();
         }
 
-        else if((game.getPlayer2() instanceof HumanPlayer) && ((HumanPlayer) game.getPlayer2()).getForfeit()) {
+        else if(game.getPlayer2().getForfeit()) {
             retour = game.getPlayer2();
         }
 
@@ -605,11 +605,11 @@ public class OthelloRule extends Rule {
     boolean isDraw(Game game) {
         boolean retour = false;
 
-        if((game.getPlayer1() instanceof HumanPlayer) &&((HumanPlayer) game.getPlayer1()).getForfeit()) {
+        if(game.getPlayer1().getForfeit()) {
             retour = false;
         }
 
-        else if((game.getPlayer2() instanceof HumanPlayer) && ((HumanPlayer) game.getPlayer2()).getForfeit()) {
+        else if(game.getPlayer2().getForfeit()) {
             retour = false;
         }
 

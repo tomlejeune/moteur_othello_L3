@@ -1,6 +1,8 @@
 package engine;
 
 import bot.Bot;
+import dao.DAOException;
+import daosgbd.DAOSGBD;
 
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
@@ -641,8 +643,20 @@ public class Game implements Cloneable, Serializable {
                             if((position.getXCoordinate() == playablePositions[i].getXCoordinate()) && (position.getYCoordinate() == playablePositions[i].getYCoordinate())) {
                                 player.setCanPlay(true);
                                 this.board.placeDisk(player, position);
-
                                 this.rule.turnDisks(this, position);
+
+                                this.positions[this.turn] = position;
+                                this.turn++;
+
+                                DAOSGBD daosgbd = new DAOSGBD();
+
+                                try {
+                                    daosgbd.saveGame(this);
+                                }
+
+                                catch(DAOException e) {
+                                    System.out.println(e.getMessage());
+                                }
 
                                 if(getPositions(this.getOtherPlayer()).length == 0) {
                                     this.setState(State.END);
@@ -662,7 +676,13 @@ public class Game implements Cloneable, Serializable {
 
                     else {
                         if((this.rule instanceof ReversiRule) || !getOtherPlayer().getCanPlay()) {
-                            this.setState(State.END);
+                            if(this.rule instanceof ReversiRule) {
+                                player.forfeit(this);
+                            }
+
+                            if(this.getState() != State.END) {
+                                this.setState(State.END);
+                            }
                         }
 
                         this.changePlayer();
@@ -685,9 +705,23 @@ public class Game implements Cloneable, Serializable {
                         if((position.getXCoordinate() == playablePositions[j].getXCoordinate()) && (position.getYCoordinate() == playablePositions[j].getYCoordinate())) {
                             player.setCanPlay(true);
                             this.board.placeDisk(player, position);
+
+                            this.positions[this.turn] = position;
+                            this.turn++;
+
+                            DAOSGBD daosgbd = new DAOSGBD();
+
+                            try {
+                                daosgbd.saveGame(this);
+                            }
+
+                            catch(DAOException e) {
+                                System.out.println(e.getMessage());
+                            }
+
                             this.changePlayer();
 
-                            if (playablePositions.length == 1) {
+                            if(playablePositions.length == 1) {
                                 this.setState(State.PLAY);
                             }
                         }

@@ -6,8 +6,8 @@ import java.util.UUID;
 import bot.BotDescription;
 import bot.BotManager;
 import bot.Bot;
-import fr.univubs.inf1603.othello.DAO.DAOException;
-import fr.univubs.inf1603.othello.DAOSGDB.DAOSGBD;
+import dao.DAOException;
+import daosgbd.DAOSGBD;
 
 /**
  * EngineBridge provides static methods to use the engine classes of the othello project.
@@ -66,10 +66,23 @@ public class EngineBridge {
 
     /**
      * Finds an random HumanPlayer to play a game with
-     * @return The HumanPlayer instance
+     *
+     * @param player Player which searches a random opponent
+     * @param opponents List of opponents where to search
+     * @return A HumanPlayer to play against
      */
-    public static HumanPlayer getRandomOpponent(HumanPlayer player) {
-        return player.findRandomOpponent();
+    public static HumanPlayer getRandomOpponent(HumanPlayer player, ArrayList<HumanPlayer> opponents) {
+        return player.findRandomOpponent(opponents);
+    }
+
+    /**
+     * Removes the given Player from the given List
+     *
+     * @param player Player which wants to be removed from the given List
+     * @param opponents List of opponents where to remove the given Player
+     */
+    public static void removeFromWaitingList(HumanPlayer player, ArrayList<HumanPlayer> opponents) {
+        player.removeFromWaitingList(opponents);
     }
 
     /**

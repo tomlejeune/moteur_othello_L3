@@ -18,7 +18,7 @@ public class MainTest {
             game.play(player1, new Position(4, 5));
         }
 
-        catch (PlayException exception) {
+        catch(PlayException exception) {
             System.out.println(exception.getMessage());
         }
 

@@ -36,6 +36,8 @@ public class GameRequest implements Serializable {
         this.accepted = false;
         this.canceled = false;
         this.gameStarted = false;
+
+        this.player2.requested(this);
     }
 
     /**
@@ -95,6 +97,7 @@ public class GameRequest implements Serializable {
 
         if(this.isAvailable() && this.isAccepted()) {
             ret = EngineBridge.createGame(UUID.randomUUID(), player1, player2, rule);
+            this.gameStarted = true;
         }
 
         return ret;
@@ -124,5 +127,29 @@ public class GameRequest implements Serializable {
      */
     public boolean isAvailable() {
         return (!this.canceled && !this.gameStarted);
+    }
+
+    /**
+     * Returns the player who created the request
+     * @return The player 1
+     */
+    public Player getPlayer1() {
+        return this.player1;
+    }
+
+    /**
+     * Returns the player who has been requested for a game
+     * @return The player 2
+     */
+    public Player getPlayer2() {
+        return this.player2;
+    }
+
+    /**
+     * Returns the rule of the game request
+     * @return The rule
+     */
+    public Rule getRule() {
+        return this.rule;
     }
 }

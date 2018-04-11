@@ -1,6 +1,7 @@
 package engine;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
@@ -29,9 +30,19 @@ public abstract class Player implements Serializable {
     private final static String DISKS_PROPERTY = "Disks";
 
     /**
+     * Name of the property "forfeit"
+     */
+    private final static String FORFEIT_PROPERTY = "Forfeit";
+
+    /**
      * Name of the property "disks"
      */
     private final static String CAN_PLAY_PROPERTY = "CanPlay";
+
+    /**
+     * Name of the property "requests"
+     */
+    private final static String REQUESTS_PROPERTY = "Requests";
 
     /**
      * Listener support.
@@ -54,9 +65,19 @@ public abstract class Player implements Serializable {
     private Disk[] disks;
 
     /**
+     * True if a Player forfeits
+     */
+    private boolean forfeit;
+
+    /**
      * True if a Player can play
      */
     private boolean canPlay;
+
+    /**
+     * Requests of game for this player
+     */
+    private ArrayList<GameRequest> requests;
 
     /**
      * Constructs a Player by initializing its Disks.
@@ -70,8 +91,11 @@ public abstract class Player implements Serializable {
         this.setNickname(nickname);
         this.disks = null;
         this.setDisks(new Disk[64]);
+        this.forfeit = false;
+        this.setForfeit(false);
         this.canPlay = true;
         this.setCanPlay(true);
+        this.requests = new ArrayList<GameRequest>();
     }
 
     /**
@@ -168,6 +192,56 @@ public abstract class Player implements Serializable {
         for(int i  = 0 ; i < this.disks.length ; i++) {
             this.disks[i] = new Disk(game, this, color);
         }
+    }
+
+    /**
+     * Forfeits the given game.
+     *
+     * @param game Game played
+     */
+    public void forfeit(Game game) {
+        this.setForfeit(true);
+
+        game.setState(State.END);
+    }
+
+    /**
+     * Sets if a HumanPlayer forfeits.
+     *
+     * @param forfeit If a HumanPlayer forfeits
+     */
+    void setForfeit(boolean forfeit) {
+        boolean oldForfeit = this.forfeit;
+
+        this.forfeit = forfeit;
+        this.changeSupport.firePropertyChange(FORFEIT_PROPERTY, oldForfeit, this.forfeit);
+    }
+
+    /**
+     * Gets if a HumanPlayer forfeits.
+     *
+     * @return If a HumanPlayer forfeits
+     */
+    public boolean getForfeit() {
+        return this.forfeit;
+    }
+
+    /**
+     * Method called when the player is requested for a game
+     */
+    void requested(GameRequest request) {
+        ArrayList<GameRequest> oldRequests = (ArrayList<GameRequest>) this.requests.clone();
+
+        this.requests.add(request);
+        this.changeSupport.firePropertyChange(REQUESTS_PROPERTY, oldRequests, this.requests);
+    }
+
+    /**
+     * Returns an ArrayList with all the requests for the player
+     * @return The requests
+     */
+    public ArrayList<GameRequest> getRequests() {
+        return (ArrayList<GameRequest>) this.requests.clone();
     }
 
     /**
