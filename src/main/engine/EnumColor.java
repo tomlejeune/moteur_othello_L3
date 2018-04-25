@@ -15,7 +15,7 @@ public enum EnumColor {
      * @param color Color wanted
      */
     EnumColor(String color) {
-        if(color != "OTHELLO" && color != "REVERSI") {
+        if(color != "BLACK" && color != "WHITE") {
             System.out.println("Erreur de couleur : Cette couleur n'existe pas");
         }
 

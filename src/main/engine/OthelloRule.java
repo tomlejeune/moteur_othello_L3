@@ -38,6 +38,19 @@ public class OthelloRule extends Rule {
 
         retour.setBoard(board);
 
+        Position[] positions = new Position[70];
+
+        positions[game.getTurn()] = new Position(3, 4);
+        game.setTurn(game.getTurn()+1);
+        positions[game.getTurn()] = new Position(3, 3);
+        game.setTurn(game.getTurn()+1);
+        positions[game.getTurn()] = new Position(4, 3);
+        game.setTurn(game.getTurn()+1);
+        positions[game.getTurn()] = new Position(4, 4);
+        game.setTurn(game.getTurn()+1);
+
+        game.setPositions(positions);
+
         return retour;
     }
 

@@ -229,7 +229,7 @@ public abstract class Player implements Serializable {
     /**
      * Method called when the player is requested for a game
      */
-    void requested(GameRequest request) {
+    public void requested(GameRequest request) {
         ArrayList<GameRequest> oldRequests = (ArrayList<GameRequest>) this.requests.clone();
 
         this.requests.add(request);

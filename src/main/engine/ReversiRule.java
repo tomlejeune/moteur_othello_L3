@@ -30,6 +30,11 @@ public class ReversiRule extends Rule {
 
         retour.setBoard(board);
 
+        Position[] positions = new Position[70];
+
+        game.setPositions(positions);
+        game.setTurn(0);
+
         return retour;
     }
 
@@ -139,7 +144,6 @@ public class ReversiRule extends Rule {
                     int j = 2;
 
                     while(((currentX+j) < 8) && (board[currentX+j][currentY] != null) && (board[currentX+j][currentY].getPlayer() != player)) {
-                        System.out.println("j : "+j);
                         j++;
                     }
 

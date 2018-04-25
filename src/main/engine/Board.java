@@ -12,7 +12,7 @@ import java.beans.PropertyChangeListener;
  *
  * @version 1.0
  */
-public class Board implements Serializable {
+public class Board implements Cloneable, Serializable {
 
     /**
      * Name of the property "board".
@@ -143,15 +143,15 @@ public class Board implements Serializable {
 
         String retour = "";
 
-        retour += "     0   1   2   3   4   5   6   7\n";
-        retour += "    _______________________________";
+        retour += "\t\t|\t\t\t\t\t 0   1   2   3   4   5   6   7\t\t\t\t |\n";
+        retour += "\t\t|\t\t\t\t\t_______________________________\t\t\t\t |\n";
 
         for(int i = 0 ; i < this.board.length ; i++) {
-            retour += "\n"+i+"  | ";
+            retour += "\t\t|\t\t\t\t"+i+"  | ";
 
             for(int j = 0 ; j < this.board[i].length ; j++) {
                 if(this.board[j][i] == null) {
-                    retour += "0 | ";
+                    retour += "  | ";
                 }
 
                 else {
@@ -166,7 +166,62 @@ public class Board implements Serializable {
 
             }
 
-            retour += "\n   |___|___|___|___|___|___|___|___|";
+            retour += "\t\t\t |\n\t\t|\t\t\t\t   |___|___|___|___|___|___|___|___|\t\t\t |\n";
+        }
+
+        return retour;
+    }
+
+    /**
+     * String version of a Board with playable positions with playable positions of the current Player
+     *
+     * @return String version of a Board with playable positions of the current Player
+     */
+    public String toString(Game game) {
+
+        String retour = "";
+        Position[] playablePositions = game.getPlayablePositions(game.getCurrentPlayer());
+        boolean placed = false;
+
+        retour += "\t\t|\t\t\t\t\t 0   1   2   3   4   5   6   7\t\t\t\t |\n";
+        retour += "\t\t|\t\t\t\t\t_______________________________\t\t\t\t |\n";
+
+        for(int i = 0 ; i < this.board.length ; i++) {
+            retour += "\t\t|\t\t\t\t"+i+"  | ";
+
+            for(int j = 0 ; j < this.board[i].length ; j++) {
+                if(this.board[j][i] == null) {
+                    for(int k = 0 ; k < playablePositions.length ; k++) {
+                        if(playablePositions[k].getXCoordinate() == j && playablePositions[k].getYCoordinate() == i) {
+                            retour += "0 | ";
+                            placed = true;
+
+                            break;
+                        }
+                    }
+
+                    if(!placed) {
+                        retour += "  | ";
+                    }
+
+                    else {
+                        placed = false;
+                    }
+                }
+
+                else {
+                    if(this.board[j][i].getPlayer() == this.game.getPlayer1()) {
+                        retour += "1 | ";
+                    }
+
+                    else if(this.board[j][i].getPlayer() == this.game.getPlayer2()) {
+                        retour += "2 | ";
+                    }
+                }
+
+            }
+
+            retour += "\t\t\t |\n\t\t|\t\t\t\t   |___|___|___|___|___|___|___|___|\t\t\t |\n";
         }
 
         return retour;
@@ -188,5 +243,34 @@ public class Board implements Serializable {
      */
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         this.changeSupport.removePropertyChangeListener(listener);
+    }
+
+    /**
+     * Clones a Board
+     *
+     * @return Clone of a Board
+     */
+    public Object clone() {
+        Object o = null;
+
+        try {
+            o = super.clone();
+
+            Disk[][] newBoardofDisks = new Disk[8][8];
+
+            for(int i = 0 ; i < this.board.length ; i++) {
+                for(int j = 0 ; j < this.board[i].length ; j++) {
+                    newBoardofDisks[i][j] = this.board[i][j];
+                }
+            }
+
+            ((Board) o).setBoard(newBoardofDisks);
+        }
+
+        catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+
+        return o;
     }
 }

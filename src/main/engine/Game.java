@@ -1,9 +1,8 @@
 package engine;
 
 import bot.Bot;
-import dao.DAOException;
-import daosgbd.DAOSGBD;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
 import java.io.Serializable;
@@ -140,12 +139,10 @@ public class Game implements Cloneable, Serializable {
 
         this.state = null;
         this.setState(State.INIT);
+        this.positions = null;
+        this.turn = 0;
         this.board = null;
         this.setBoard(this.rule.initializeBoard(this));
-        this.positions = null;
-        this.setPositions(new Position[64]);
-        this.turn = 0;
-        this.setTurn(0);
 
         if(this.rule instanceof OthelloRule) {
             this.setState(State.PLAY);
@@ -181,7 +178,7 @@ public class Game implements Cloneable, Serializable {
         this.player2 = null;
         this.setPlayer2(player2);
         this.currentPlayer = null;
-        this.setCurrentPlayer(this.rule.getFirstPlayer(this));
+        this.setCurrentPlayer(this.player1);
 
         this.currentPlayer.initializeDisks(this, EnumColor.BLACK);
         this.getOtherPlayer().initializeDisks(this, EnumColor.WHITE);
@@ -189,32 +186,103 @@ public class Game implements Cloneable, Serializable {
         this.state = null;
         this.setState(State.INIT);
         this.board = null;
-        this.setBoard(this.rule.initializeBoard(this));
+        this.setBoard(new Board(this));
         this.positions = null;
         this.setPositions(positions);
         this.turn = 0;
-        this.setTurn(this.positions.length);
-
-        if(this.rule instanceof OthelloRule) {
-            this.setState(State.PLAY);
-        }
 
         Disk[][] b = new Disk[8][8];
+        this.board.setBoard(b);
 
-        Disk[] disksPlayer1 = this.player1.getDisks();
-        Disk[] disksPlayer2 = this.player2.getDisks();
+        int nbTurn = 0;
 
-        for(int i = 0 ; i < this.positions.length ; i++) {
-            if((i % 2) == 0) {
-                b[this.positions[i].getXCoordinate()][this.positions[i].getYCoordinate()] = disksPlayer1[this.getNbPoints(player1)];
-            }
+        if(this.rule instanceof OthelloRule) {
+            Disk[] disksPlayer1 = this.getPlayer1().getDisks();
+            Disk[] disksPlayer2 = this.getPlayer2().getDisks();
 
-            else {
-                b[this.positions[i].getXCoordinate()][this.positions[i].getYCoordinate()] = disksPlayer2[this.getNbPoints(player2)];
+            b[3][3] = disksPlayer2[0];
+            b[3][4] = disksPlayer1[0];
+            b[4][3] = disksPlayer1[1];
+            b[4][4] = disksPlayer2[1];
+
+            this.board.setBoard(b);
+
+            this.setState(State.PLAY);
+
+            nbTurn = 4;
+
+            for(int i = 4 ; i < this.positions.length ; i++) {
+                this.setTurn(i);
+
+                if((i % 2) == 0) {
+                    if(this.positions[i] != null) {
+                        try {
+                            this.play(this.player1, positions[i]);
+                            nbTurn++;
+                        }
+
+                        catch (PlayException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                }
+
+                else {
+                    if(this.positions[i] != null) {
+                        try {
+                            this.play(this.player2, positions[i]);
+                            nbTurn++;
+                        }
+
+                        catch (PlayException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                }
             }
         }
 
-        this.board.setBoard(b);
+        else {
+            for(int i = 0 ; i < this.positions.length ; i++) {
+                this.setTurn(i);
+
+                if((i % 2) == 0) {
+                    if(this.positions[i] != null) {
+                        try {
+                            this.play(this.player1, positions[i]);
+                            nbTurn++;
+                        }
+
+                        catch (PlayException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                }
+
+                else {
+                    if(this.positions[i] != null) {
+                        try {
+                            this.play(this.player2, positions[i]);
+                            nbTurn++;
+                        }
+
+                        catch (PlayException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                }
+            }
+        }
+
+        this.setTurn(nbTurn);
+
+        if((this.turn % 2) == 0) {
+            this.setCurrentPlayer(this.player1);
+        }
+
+        else {
+            this.setCurrentPlayer(this.player2);
+        }
 
         if(this.player1 instanceof Bot) {
             ((Bot) this.player1).setGame(this);
@@ -326,11 +394,8 @@ public class Game implements Cloneable, Serializable {
     void setCurrentPlayer(Player player) {
         Player oldPlayer = this.currentPlayer;
 
-        if(player == this.getOtherPlayer()) {
-            this.currentPlayer = player;
-
-            this.changeSupport.firePropertyChange(CURRENT_PLAYER_PROPERTY, oldPlayer, this.currentPlayer);
-        }
+        this.currentPlayer = player;
+        this.changeSupport.firePropertyChange(CURRENT_PLAYER_PROPERTY, oldPlayer, this.currentPlayer);
     }
 
     /**
@@ -642,27 +707,24 @@ public class Game implements Cloneable, Serializable {
                         while(i < playablePositions.length) {
                             if((position.getXCoordinate() == playablePositions[i].getXCoordinate()) && (position.getYCoordinate() == playablePositions[i].getYCoordinate())) {
                                 player.setCanPlay(true);
+
+                                Board oldBoard = (Board) this.board.clone();
+
                                 this.board.placeDisk(player, position);
                                 this.rule.turnDisks(this, position);
 
-                                this.positions[this.turn] = position;
-                                this.turn++;
-
-                                DAOSGBD daosgbd = new DAOSGBD();
-
-                                try {
-                                    daosgbd.saveGame(this);
-                                }
-
-                                catch(DAOException e) {
-                                    System.out.println(e.getMessage());
-                                }
+                                this.changeSupport.firePropertyChange(BOARD_PROPERTY, oldBoard, this.board);
 
                                 if(getPositions(this.getOtherPlayer()).length == 0) {
                                     this.setState(State.END);
                                 }
 
+                                this.positions[this.turn] = position;
+                                this.turn++;
+
                                 this.changePlayer();
+
+                                break;
                             }
 
                             i++;
@@ -671,7 +733,6 @@ public class Game implements Cloneable, Serializable {
                         if(!player.getCanPlay()) {
                             throw new PlayException("Not a playable position");
                         }
-
                     }
 
                     else {
@@ -685,6 +746,7 @@ public class Game implements Cloneable, Serializable {
                             }
                         }
 
+                        this.turn++;
                         this.changePlayer();
                     }
                 }
@@ -704,26 +766,23 @@ public class Game implements Cloneable, Serializable {
                     while(j < playablePositions.length) {
                         if((position.getXCoordinate() == playablePositions[j].getXCoordinate()) && (position.getYCoordinate() == playablePositions[j].getYCoordinate())) {
                             player.setCanPlay(true);
+
+                            Board oldBoard = this.board;
+
                             this.board.placeDisk(player, position);
 
-                            this.positions[this.turn] = position;
-                            this.turn++;
-
-                            DAOSGBD daosgbd = new DAOSGBD();
-
-                            try {
-                                daosgbd.saveGame(this);
-                            }
-
-                            catch(DAOException e) {
-                                System.out.println(e.getMessage());
-                            }
-
-                            this.changePlayer();
+                            this.changeSupport.firePropertyChange(BOARD_PROPERTY, oldBoard, this.board);
 
                             if(playablePositions.length == 1) {
                                 this.setState(State.PLAY);
                             }
+
+                            this.positions[this.turn] = position;
+                            this.turn++;
+
+                            this.changePlayer();
+
+                            break;
                         }
 
                         j++;
@@ -739,7 +798,7 @@ public class Game implements Cloneable, Serializable {
                 throw new PlayException("You can't play, the State of the Game is not PLAY or INIT");
             }
 
-            if(this.getPlayablePositions(player).length == 0 && this.getPlayablePositions(this.getOtherPlayer()).length == 0) {
+            if(this.getPlayablePositions(this.getCurrentPlayer()).length == 0 && this.getPlayablePositions(this.getOtherPlayer()).length == 0) {
                 this.setState(State.END);
             }
         }
@@ -756,6 +815,23 @@ public class Game implements Cloneable, Serializable {
      */
     public Player getWinner() {
         return this.rule.getWinner(this);
+    }
+
+    /**
+     * Sets a random winner of the Game
+     *
+     * @return A random winner of the Game
+     */
+    public Player setWinner() {
+        double nb = Math.random();
+
+        if(nb > 0.5) {
+            return this.player1;
+        }
+
+        else {
+            return this.player2;
+        }
     }
 
     /**
@@ -803,6 +879,90 @@ public class Game implements Cloneable, Serializable {
     }
 
     /**
+     * Clones a Game
+     *
+     * @return Clone of a Game
+     */
+    public Object clone() {
+        Object o = null;
+
+        try {
+            o = super.clone();
+            ((Game) o).setBoard((Board) this.getBoard().clone());
+        }
+
+        catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+
+        return o;
+    }
+
+    /**
+     * Modifies the Game by replacing a property with the given PropertyChangeEvent
+     *
+     * @param propertyChangeEvent New value of a property
+     */
+    public void modifyGame(PropertyChangeEvent propertyChangeEvent) {
+        if(propertyChangeEvent.getPropertyName().equals(ID_GAME_PROPERTY)) {
+            this.idGame = (UUID) propertyChangeEvent.getNewValue();
+        }
+
+        else if(propertyChangeEvent.getPropertyName().equals(RULE_PROPERTY)) {
+            this.rule = (Rule) propertyChangeEvent.getNewValue();
+        }
+
+        else if(propertyChangeEvent.getPropertyName().equals(PLAYER_1_PROPERTY)) {
+            this.player1 = (Player) propertyChangeEvent.getNewValue();
+        }
+
+        else if(propertyChangeEvent.getPropertyName().equals(PLAYER_2_PROPERTY)) {
+            this.player2 = (Player) propertyChangeEvent.getNewValue();
+        }
+
+        else if(propertyChangeEvent.getPropertyName().equals(CURRENT_PLAYER_PROPERTY)) {
+            if(this.currentPlayer == this.player1) {
+                this.currentPlayer = this.player2;
+            }
+
+            else {
+                this.currentPlayer = this.player1;
+            }
+        }
+
+        else if(propertyChangeEvent.getPropertyName().equals(STATE_PROPERTY)) {
+            this.state = (State) propertyChangeEvent.getNewValue();
+        }
+
+        else if(propertyChangeEvent.getPropertyName().equals(BOARD_PROPERTY)) {
+            Board tmp = ((Board)propertyChangeEvent.getNewValue());
+
+            Disk[][] newBoardContent = tmp.getBoard();
+            Disk[][] toUpdContent = this.board.getBoard();
+
+            for(int x = 0 ; x < 8 ; x++) {
+                for(int y = 0 ; y < 8 ; y++) {
+                    if(newBoardContent[y][x]!= null && toUpdContent[y][x] == null) {
+                        //System.out.println("!!!!!!!!!!!!!!!nouveau pion en "+x+" "+y);
+                        Player p = newBoardContent[y][x].getPlayer().getId().equals(this.player1.getId())?this.player1:this.player2;
+
+                        this.board.placeDisk(p, new Position(y,x));
+                        this.rule.turnDisks(this, new Position(y,x));
+                    }
+                }
+            }
+        }
+
+        else if(propertyChangeEvent.getPropertyName().equals(POSITIONS_PROPERTY)) {
+            this.positions = (Position[]) propertyChangeEvent.getNewValue();
+        }
+
+        else if(propertyChangeEvent.getPropertyName().equals(TURN_PROPERTY)) {
+            this.turn = (int) propertyChangeEvent.getNewValue();
+        }
+    }
+
+    /**
      * Add a PropertyChangeListener to the listener list.
      *
      * @param listener The PropertyChangeListener to be added
@@ -818,24 +978,5 @@ public class Game implements Cloneable, Serializable {
      */
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         this.changeSupport.removePropertyChangeListener(listener);
-    }
-
-    /**
-     * Clones a Game
-     *
-     * @return Clone of a Game
-     */
-    public Object clone() {
-        Object o = null;
-
-        try {
-            o = super.clone();
-        }
-
-        catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-
-        return o;
     }
 }

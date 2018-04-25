@@ -1,28 +1,39 @@
 package engine;
 
+import bot.EasyBot;
+import bot.HardBot;
+import bot.IntelligentBot;
+
 import java.util.UUID;
 
 public class MainTest {
 
     public static void main(String[] args) {
-        Player player1 = new HumanPlayer(UUID.randomUUID(), "", "", "");
-        Player player2 = new HumanPlayer(UUID.randomUUID(), "", "", "");
-
         Rule rule = new OthelloRule();
 
-        Game game = new Game(UUID.randomUUID(), player1, player2, rule);
+        Game game = new Game(UUID.randomUUID(), new HumanPlayer(UUID.randomUUID(), "oui", "", ""), new HumanPlayer(UUID.randomUUID(), "non", "", ""), rule);
 
-        System.out.println("\nTEST : \n");
+        System.out.println(game.getBoard().toString(game));
 
-        try {
+        /*for(int i = 0 ; i < 1 ; i++) {
+            Game game = new Game(UUID.randomUUID(), player1, player2, rule);
+
+            System.out.println("\nTEST "+i+" :\n");
+
+            System.out.println(game.getBoard().toString());
+
+            for(int j = 0 ; j < game.getPositions().length ; j++) {
+                System.out.println("Coup "+j+" : "+game.getPositions()[j]);
+            }
+        }*/
+
+        /*try {
             game.play(player1, new Position(4, 5));
         }
 
         catch(PlayException exception) {
             System.out.println(exception.getMessage());
         }
-
-        System.out.println(game.getBoard().toString());
 
         Position[] positionsPlayer1 = game.getPositions(player1);
         Position[] positionsPlayer2 = game.getPositions(player2);
@@ -52,6 +63,6 @@ public class MainTest {
 
         for(int i = 0 ; i < possiblePositionsPlayer2.length ; i++) {
             System.out.println(possiblePositionsPlayer2[i].toString());
-        }
+        }*/
     }
 }

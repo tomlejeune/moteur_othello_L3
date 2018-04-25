@@ -1,8 +1,5 @@
 package engine;
 
-import dao.DAOException;
-import daosgbd.DAOSGBD;
-
 import java.util.ArrayList;
 import java.util.UUID;
 import java.beans.PropertyChangeSupport;
@@ -100,50 +97,6 @@ public class HumanPlayer extends Player {
     }
 
     /**
-     * Persists a HumanPlayer into the DAO.
-     *
-     * @param email Email of the HumanPlayer
-     * @param password Password of the HumanPlayer
-     * @param name Name of the HumanPlayer
-     */
-    void createAccount(String email, String password, String name) {
-        DAOSGBD daosgbd = new DAOSGBD();
-
-        this.setMail(email);
-        this.setHashPassword(password);
-        this.setNickname(name);
-
-        try {
-            daosgbd.savePlayer(this);
-        }
-
-        catch (DAOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    /**
-     * Remove a HumanPlayer from the DAO.
-     *
-     * @param email Email of the HumanPlayer
-     * @param password Password of the HumanPlayer
-     */
-    void removeAccount(String email, String password) {
-        DAOSGBD daosgbd = new DAOSGBD();
-
-        if(this.mail == email && this.hashPassword == password) {
-            try {
-                daosgbd.deletePlayer(this.getId());
-            }
-
-            catch (DAOException e) {
-                System.out.println(e.getMessage());
-            }
-
-        }
-    }
-
-    /**
      * Finds a random Player to play against.
      *
      * @param opponents List of opponents
@@ -160,6 +113,15 @@ public class HumanPlayer extends Player {
      */
     void removeFromWaitingList(ArrayList<HumanPlayer> opponents) {
         RandomOpponentHandler.removeFromRandomOppoment(this, opponents);
+    }
+
+    /**
+     * String version of a HumanPlayer
+     *
+     * @return String version of a HumanPlayer
+     */
+    public String toString() {
+        return "HumanPlayer : "+this.getNickname();
     }
 
     /**

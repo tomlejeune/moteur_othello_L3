@@ -6,8 +6,6 @@ import java.util.UUID;
 import bot.BotDescription;
 import bot.BotManager;
 import bot.Bot;
-import dao.DAOException;
-import daosgbd.DAOSGBD;
 
 /**
  * EngineBridge provides static methods to use the engine classes of the othello project.
@@ -118,17 +116,29 @@ public class EngineBridge {
     }
 
     /**
-     * Creates a Game with the given players and rule
+     * Creates a Game with the given Players, the given Rule and the given array of Positions
      *
      * @param id UUID of the Game
      * @param player1 The first Player
      * @param player2 The second Player
-     * @param rule The rule for the game
+     * @param rule The Rule for the Game
      * @param positions Positions played in the Game
      * @return The Game instance
      */
     public static Game createGame(UUID id, Player player1, Player player2, Rule rule, Position[] positions) {
         return new Game(id, player1, player2, rule, positions);
+    }
+
+    /**
+     * Creates a GameRequest with the given Players and the given Rule
+     *
+     * @param player1 The first Player
+     * @param player2 The second Player
+     * @param rule The rule of the Game
+     * @return The GameRequest created
+     */
+    public static GameRequest createGameRequest(Player player1, Player player2, Rule rule) {
+        return new GameRequest(player1, player2, rule);
     }
 
     /**
@@ -142,92 +152,11 @@ public class EngineBridge {
     }
 
     /**
-     * Saves the given Player
-     * @param player The player to save
-     */
-    public static void savePlayer(Player player) {
-        DAOSGBD daosgbd = new DAOSGBD();
-
-        try {
-            daosgbd.savePlayer(player);
-        }
-
-        catch(DAOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    /**
-     * Loads the Player matching the given mail and password
-     * @param mail The mail address of the Player
-     * @param password The password of the Player
-     * @return The Player instance, null if no matching player was found
-     */
-    public static Player loadPlayer(String mail, String password) {
-        DAOSGBD daosgbd = new DAOSGBD();
-
-        try {
-            return daosgbd.findPlayer(mail, password);
-        }
-
-        catch(DAOException e) {
-            System.out.println(e.getMessage());
-        }
-
-        return null;
-    }
-
-    /**
-     * Finds the Player matching the given id
-     * @param id The id of the Player to find
-     */
-    public static Player loadPlayer(UUID id) {
-        DAOSGBD daosgbd = new DAOSGBD();
-
-        try {
-            return daosgbd.findPlayer(id);
-        }
-
-        catch(DAOException e) {
-            System.out.println(e.getMessage());
-        }
-
-        return null;
-    }
-
-    /**
-     * Saves the given Game
-     * @param game The Game to save
-     */
-    public static void saveGame(Game game) {
-        DAOSGBD daosgbd = new DAOSGBD();
-
-        try {
-            daosgbd.saveGame(game);
-        }
-
-        catch(DAOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    /**
      * Loads all the games of a Player
      * @param player The player from whom the games are loaded
      * @return An array of GameDescriptor of the Player games
      */
-    public static GameDescriptor[] loadGames(Player player) {
-        DAOSGBD daosgbd = new DAOSGBD();
-        ArrayList<Game> games = new ArrayList<Game>();
-
-        try {
-            games = daosgbd.findGames(player.getId());
-        }
-
-        catch(DAOException e) {
-            e.printStackTrace();
-        }
-
+    public static GameDescriptor[] loadGames(Player player, ArrayList<Game> games) {
         GameDescriptor[] gameDescriptors = new GameDescriptor[games.size()];
 
         int i = 0;
@@ -242,55 +171,4 @@ public class EngineBridge {
         return gameDescriptors;
     }
 
-    /**
-     * Loads the Game matching the given GameDescriptor
-     * @param gameDesc The game to load
-     * @return The Game instance
-     */
-    public static Game loadGame(GameDescriptor gameDesc) {
-        DAOSGBD daosgbd = new DAOSGBD();
-
-        try {
-            return daosgbd.findGame(gameDesc.getId());
-        }
-
-        catch(DAOException e) {
-            System.out.println(e.getMessage());
-        }
-
-        return null;
-    }
-
-    /**
-     * Removes the player matching the given mail and password from the persitance
-     * @param mail The mail address of the Player
-     * @param password The password of the Player
-     */
-    public static void removePlayer(String mail, String password) {
-        DAOSGBD daosgbd = new DAOSGBD();
-
-        try {
-            daosgbd.deletePlayer(daosgbd.findPlayer(mail, password).getId());
-        }
-
-        catch(DAOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    /**
-     * Removes the Games matching the given GameDescriptor from the persistance
-     * @param gameDesc The game to remove
-     */
-    public static void removeGame(GameDescriptor gameDesc) {
-        DAOSGBD daosgbd = new DAOSGBD();
-
-        try {
-            daosgbd.deleteGame(gameDesc.getId());
-        }
-
-        catch(DAOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
 }

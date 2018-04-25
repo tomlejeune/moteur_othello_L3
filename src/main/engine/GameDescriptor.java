@@ -47,8 +47,6 @@ public class GameDescriptor implements Serializable {
         this.state = state;
 
         this.playersScores = new Hashtable<Player, Integer>();
-        //this.playersScores.put(player1, Counter.getNbPoint(DAO.getGame(id), player1));
-        //this.playersScores.put(player2, Counter.getNbPoint(DAO.getGame(id), player2));
     }
 
     /**
