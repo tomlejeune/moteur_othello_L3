@@ -145,25 +145,25 @@ public class JunitTest {
 
         Position[] possiblePositionsPlayer1 = game.getPlayablePositions(player1);
 
-        assertEquals(3, possiblePositionsPlayer1[0].getXCoordinate());
-        assertEquals(2, possiblePositionsPlayer1[0].getYCoordinate());
-        assertEquals(5, possiblePositionsPlayer1[1].getXCoordinate());
-        assertEquals(4, possiblePositionsPlayer1[1].getYCoordinate());
+        assertEquals(2, possiblePositionsPlayer1[0].getXCoordinate());
+        assertEquals(3, possiblePositionsPlayer1[0].getYCoordinate());
+        assertEquals(3, possiblePositionsPlayer1[1].getXCoordinate());
+        assertEquals(2, possiblePositionsPlayer1[1].getYCoordinate());
         assertEquals(4, possiblePositionsPlayer1[2].getXCoordinate());
         assertEquals(5, possiblePositionsPlayer1[2].getYCoordinate());
-        assertEquals(2, possiblePositionsPlayer1[3].getXCoordinate());
-        assertEquals(3, possiblePositionsPlayer1[3].getYCoordinate());
+        assertEquals(5, possiblePositionsPlayer1[3].getXCoordinate());
+        assertEquals(4, possiblePositionsPlayer1[3].getYCoordinate());
 
         Position[] possiblePositionsPlayer2 = game.getPlayablePositions(player2);
 
-        assertEquals(3, possiblePositionsPlayer2[0].getXCoordinate());
-        assertEquals(5, possiblePositionsPlayer2[0].getYCoordinate());
-        assertEquals(5, possiblePositionsPlayer2[1].getXCoordinate());
-        assertEquals(3, possiblePositionsPlayer2[1].getYCoordinate());
+        assertEquals(2, possiblePositionsPlayer2[0].getXCoordinate());
+        assertEquals(4, possiblePositionsPlayer2[0].getYCoordinate());
+        assertEquals(3, possiblePositionsPlayer2[1].getXCoordinate());
+        assertEquals(5, possiblePositionsPlayer2[1].getYCoordinate());
         assertEquals(4, possiblePositionsPlayer2[2].getXCoordinate());
         assertEquals(2, possiblePositionsPlayer2[2].getYCoordinate());
-        assertEquals(2, possiblePositionsPlayer2[3].getXCoordinate());
-        assertEquals(4, possiblePositionsPlayer2[3].getYCoordinate());
+        assertEquals(5, possiblePositionsPlayer2[3].getXCoordinate());
+        assertEquals(3, possiblePositionsPlayer2[3].getYCoordinate());
 
         Position positionPlayed = new Position(4, 5);
 
@@ -255,8 +255,8 @@ public class JunitTest {
         Position[] possiblePositionsPlayer1 = game.getPlayablePositions(player1);
 
         assertEquals(4, game.getPlayablePositions(player1).length);
-        assertEquals(3, possiblePositionsPlayer1[0].getXCoordinate());
-        assertEquals(2, possiblePositionsPlayer1[0].getYCoordinate());
+        assertEquals(2, possiblePositionsPlayer1[0].getXCoordinate());
+        assertEquals(3, possiblePositionsPlayer1[0].getYCoordinate());
 
         assertEquals(2, game.getNbPointsIfPlayed(pos1, player1));
         assertEquals(2, game.getNbPointsIfPlayed(pos2, player1));
@@ -348,5 +348,88 @@ public class JunitTest {
 
         assertEquals(3, game.getPlayablePositions(player1).length);
         assertEquals(3, game.getPlayablePositions(player2).length);
+    }
+
+    @Test
+    public void testTotalGame() throws PlayException {
+        HumanPlayer player1 = new HumanPlayer(UUID.randomUUID(), "", "", "");
+        HumanPlayer player2 = new HumanPlayer(UUID.randomUUID(), "", "", "");
+        Rule rule = new OthelloRule();
+        Game game = new Game(UUID.randomUUID(), player1, player2, rule);
+        Board b = game.getBoard();
+
+        assertEquals(player1, game.getCurrentPlayer());
+        assertEquals(player2, game.getOtherPlayer());
+
+        assertEquals(State.PLAY, game.getState());
+
+        game.play(player1, new Position(3, 2));
+        game.play(player2, new Position(2, 4));
+        game.play(player1, new Position(2, 5));
+        game.play(player2, new Position(4, 2));
+        game.play(player1, new Position(5, 2));
+        game.play(player2, new Position(3, 1));
+        game.play(player1, new Position(3, 0));
+        game.play(player2, new Position(2, 6));
+        game.play(player1, new Position(1, 4));
+        game.play(player2, new Position(0, 4));
+        game.play(player1, new Position(1, 5));
+        game.play(player2, new Position(6, 1));
+        game.play(player1, new Position(6, 2));
+        game.play(player2, new Position(2, 2));
+        game.play(player1, new Position(1, 2));
+        game.play(player2, new Position(1, 1));
+        game.play(player1, new Position(5, 4));
+        game.play(player2, new Position(7, 2));
+        game.play(player1, new Position(0, 0));
+        game.play(player2, new Position(0, 6));
+        game.play(player1, new Position(7, 0));
+        game.play(player2, new Position(2, 0));
+        game.play(player1, new Position(1, 0));
+        game.play(player2, new Position(6, 0));
+        game.play(player1, new Position(5, 0));
+        game.play(player2, new Position(5, 3));
+        game.play(player1, new Position(4, 0));
+        game.play(player2, new Position(6, 4));
+        game.play(player1, new Position(6, 3));
+        game.play(player2, new Position(7, 3));
+        game.play(player1, new Position(7,5));
+        game.play(player2, new Position(7,1));
+        game.play(player1, new Position(7,4));
+        game.play(player2, new Position(5,1));
+        game.play(player1, new Position(2,3));
+        game.play(player2, new Position(6,5));
+        game.play(player1, new Position(4,5));
+        game.play(player2, new Position(4,6));
+        game.play(player1, new Position(5,6));
+        game.play(player2, new Position(7,6));
+        game.play(player1, new Position(7,7));
+        game.play(player2, new Position(4,7));
+        game.play(player1, new Position(6,7));
+        game.play(player2, new Position(3,6));
+        game.play(player1, new Position(2,7));
+        game.play(player2, new Position(6,6));
+        game.play(player1, new Position(5,5));
+        game.play(player2, new Position(3,7));
+        game.play(player1, new Position(0,3));
+        game.play(player2, new Position(1,7));
+        game.play(player1, new Position(0,5));
+        game.play(player2, new Position(1,6));
+        game.play(player1, new Position(0,7));
+        game.play(player2, new Position(0,1));
+        game.play(player1, new Position(0,2));
+        game.play(player2, new Position(1,3));
+        game.play(player1, new Position(2,1));
+        game.play(player2, new Position(3,5));
+        game.play(player1, new Position(4,1));
+        game.play(player2, new Position(9,9));
+        game.play(player1, new Position(5,7));
+
+        assertEquals(State.END, game.getState());
+
+        if (!game.isDraw()) {
+            assertEquals(player1, game.getWinner());
+            assertEquals(player2, game.getLoser());
+        }
     }
 }
